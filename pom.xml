@@ -223,7 +223,7 @@
 			<properties>
 				<packaging.type>jar</packaging.type>
 				<!-- properties to rewrite placeholders in application.properties -->
-				<mvn.datasource.url>jdbc:mysql://heroku:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
+				<mvn.datasource.url>jdbc:${env.DATABASE_URL}?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 			</properties>
