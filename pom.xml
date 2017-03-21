@@ -77,7 +77,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
-					<argLine>-Dfile.encoding=UTF-8</argLine>
+					<systemPropertyVariables>
+						<file.encoding>UTF-8</file.encoding>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 		</plugins>
