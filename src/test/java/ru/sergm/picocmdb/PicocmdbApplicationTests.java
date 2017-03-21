@@ -1,4 +1,4 @@
-package ru.sergm;
+package ru.sergm.picocmdb;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

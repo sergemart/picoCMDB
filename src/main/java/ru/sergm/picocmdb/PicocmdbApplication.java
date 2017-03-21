@@ -1,4 +1,4 @@
-package ru.sergm;
+package ru.sergm.picocmdb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
