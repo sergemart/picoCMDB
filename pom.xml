@@ -26,9 +26,9 @@
 		<maven.deploy.skip>true</maven.deploy.skip>
 		<!-- custom properties -->
 			<!-- to configure Tomcat deployment -->
-		<mvn.tomcat.url>stub</mvn.tomcat.url> 								<!-- set in a profile -->
-		<mvn.tomcat.username>stub</mvn.tomcat.username> 					<!-- set in a profile -->
-		<mvn.tomcat.password>stub</mvn.tomcat.password>						<!-- set in a profile -->
+		<mvn.tomcat.url>stub</mvn.tomcat.url> 								<!-- set in WAR profiles -->
+		<mvn.tomcat.username>stub</mvn.tomcat.username> 					<!-- set in WAR profiles -->
+		<mvn.tomcat.password>stub</mvn.tomcat.password>						<!-- set in WAR profiles -->
 			<!-- to rewrite placeholders in application.properties -->
 		<mvn.datasource.url>stub</mvn.datasource.url>						<!-- set in a profile -->
 		<mvn.datasource.username>stub</mvn.datasource.username>				<!-- set in a profile -->
@@ -155,6 +155,30 @@
 			</build>
 		</profile>
 
+		<!-- build as executable JAR for heroku.com environment -->
+		<profile>
+			<id>prod-JAR</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<packaging.type>jar</packaging.type>
+				<!-- properties to rewrite placeholders in application.properties -->
+				<mvn.datasource.url>jdbc:${env.DATABASE_URL}?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
+				<mvn.datasource.username>root</mvn.datasource.username>
+				<mvn.datasource.password>root</mvn.datasource.password>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- to make and control an executable jar -->
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 		<!-- build and deploy as WAR to local Tomcat -->
 		<profile>
 			<id>dev-WAR</id>
@@ -175,7 +199,7 @@
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
-					<!-- to ensure that the embedded servlet container doesn’t interfere with the external one -->
+					<!-- for WAR profiles; to ensure that the embedded servlet container doesn’t interfere with the external one -->
 					<scope>provided</scope>
 				</dependency>
 			</dependencies>
@@ -184,21 +208,7 @@
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
-						<!--version>2.2</version>
-						<configuration>
-							<url>http://localhost:8080/manager/text</url>
-							<update>true</update>
-							<username>maven</username>
-							<password>maven</password>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>deploy</phase>
-								<goals>
-									<goal>redeploy</goal>
-								</goals>
-							</execution>
-						</executions-->
+						<!-- plugin config defined in pluginManagement section -->
 					</plugin>
 				</plugins>
 			</build>
@@ -224,7 +234,7 @@
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
-					<!-- to ensure that the embedded servlet container doesn’t interfere with the external one -->
+					<!-- for WAR profiles; to ensure that the embedded servlet container doesn’t interfere with the external one -->
 					<scope>provided</scope>
 				</dependency>
 			</dependencies>
@@ -233,46 +243,7 @@
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
-						<!--version>2.2</version>
-						<configuration>
-							<url>http://tomcat:8080/manager/text</url>
-							<update>true</update>
-							<username>maven</username>
-							<password>maven</password>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>deploy</phase>
-								<goals>
-									<goal>redeploy</goal>
-								</goals>
-							</execution>
-						</executions-->
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-
-		<!-- build as executable JAR for heroku.com environment -->
-		<profile>
-			<id>prod-JAR</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<packaging.type>jar</packaging.type>
-				<!-- properties to rewrite placeholders in application.properties -->
-				<mvn.datasource.url>jdbc:${env.DATABASE_URL}?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
-				<mvn.datasource.username>root</mvn.datasource.username>
-				<mvn.datasource.password>root</mvn.datasource.password>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<!-- to make and control an executable jar -->
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
+						<!-- plugin config defined in pluginManagement section -->
 					</plugin>
 				</plugins>
 			</build>
