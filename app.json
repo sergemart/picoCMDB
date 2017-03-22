@@ -1,5 +1,6 @@
 {
   "name": "picoCMDB",
   "description": "А primitive CMDB to keep track of multi-component application or system",
+  "image": "heroku/java",
   "addons": [ "heroku-postgresql" ]
 }
