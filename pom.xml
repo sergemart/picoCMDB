@@ -83,6 +83,18 @@
 					<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<!-- turn on/off testing of the tests; set in profile -->
+							<skipTests>${mvn.skipUnitTests}</skipTests>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 
@@ -121,6 +133,8 @@
 			</activation>
 			<properties>
 				<packaging.type>jar</packaging.type>
+				<mvn.skipUnitTests>false</mvn.skipUnitTests>
+				<mvn.skipIntegrationTests>false</mvn.skipIntegrationTests>
 				<!-- properties to rewrite placeholders in application.properties -->
 				<mvn.datasource.url>jdbc:mysql://localhost:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
@@ -164,6 +178,8 @@
 			</activation>
 			<properties>
 				<packaging.type>jar</packaging.type>
+				<mvn.skipUnitTests>true</mvn.skipUnitTests>
+				<mvn.skipIntegrationTests>true</mvn.skipIntegrationTests>
 				<!-- properties to rewrite placeholders in application.properties -->
 				<mvn.datasource.url>jdbc:${env.DATABASE_URL}?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
@@ -194,6 +210,8 @@
 			</activation>
 			<properties>
 				<packaging.type>war</packaging.type>
+				<mvn.skipUnitTests>false</mvn.skipUnitTests>
+				<mvn.skipIntegrationTests>false</mvn.skipIntegrationTests>
 				<mvn.tomcat.url>http://localhost:8080/manager/text</mvn.tomcat.url>
 				<mvn.tomcat.username>maven</mvn.tomcat.username>
 				<mvn.tomcat.password>maven</mvn.tomcat.password>
@@ -233,6 +251,8 @@
 			</activation>
 			<properties>
 				<packaging.type>war</packaging.type>
+				<mvn.skipUnitTests>true</mvn.skipUnitTests>
+				<mvn.skipIntegrationTests>true</mvn.skipIntegrationTests>
 				<mvn.tomcat.url>http://tomcat.igelkott:8080/manager/text</mvn.tomcat.url>
 				<mvn.tomcat.username>maven</mvn.tomcat.username>
 				<mvn.tomcat.password>maven</mvn.tomcat.password>
