@@ -60,17 +60,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>9.4-1201-jdbc4</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf-spring4</artifactId>
 		</dependency>
@@ -137,6 +126,12 @@
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+				</dependency>
+			</dependencies>
 			<build>
 				<plugins>
 					<plugin>
@@ -174,6 +169,12 @@
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</dependency>
+			</dependencies>
 			<build>
 				<plugins>
 					<plugin>
@@ -207,6 +208,10 @@
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 					<!-- for WAR profiles; to ensure that the embedded servlet container doesn’t interfere with the external one -->
 					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
 				</dependency>
 			</dependencies>
 			<build>
@@ -242,6 +247,10 @@
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 					<!-- for WAR profiles; to ensure that the embedded servlet container doesn’t interfere with the external one -->
 					<scope>provided</scope>
+				</dependency>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
 				</dependency>
 			</dependencies>
 			<build>

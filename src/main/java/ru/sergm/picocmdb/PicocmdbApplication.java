@@ -7,6 +7,9 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @SpringBootApplication
 @ComponentScan
@@ -14,6 +17,8 @@ import org.springframework.context.annotation.ComponentScan;
 public class PicocmdbApplication
 		//to run on Tomcat
 		extends SpringBootServletInitializer{
+
+	private static final Logger LOG = LoggerFactory.getLogger(PicocmdbApplication.class);
 
 	// to run on Tomcat
 	@Override
@@ -24,5 +29,6 @@ public class PicocmdbApplication
 
 	public static void main(String[] args) {
 		SpringApplication.run(PicocmdbApplication.class, args);
+		LOG.info("{} started, logging is functional", PicocmdbApplication.class.toString());
 	}
 }
