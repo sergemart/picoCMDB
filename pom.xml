@@ -25,6 +25,9 @@
 		<!-- turn off default maven-deploy-plugin -->
 		<maven.deploy.skip>true</maven.deploy.skip>
 		<!-- custom properties -->
+			<!-- test runners control -->
+		<mvn.skipUnitTests>stub</mvn.skipUnitTests>                 		<!-- set in a profile -->
+		<mvn.skipIntegrationTests>stub</mvn.skipIntegrationTests>			<!-- set in a profile -->
 			<!-- to configure Tomcat deployment -->
 		<mvn.tomcat.url>stub</mvn.tomcat.url> 								<!-- set in WAR profiles -->
 		<mvn.tomcat.username>stub</mvn.tomcat.username> 					<!-- set in WAR profiles -->
@@ -75,7 +78,7 @@
 		</resources>
 
 		<plugins>
-			<!-- to configure default test-runner plugin -->
+			<!-- to configure unit-test-runner plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -85,6 +88,7 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>default-test</id>	<!-- to override built-in execution w/ same name -->
 						<phase>test</phase>
 						<goals>
 							<goal>test</goal>
@@ -92,6 +96,29 @@
 						<configuration>
 							<!-- turn on/off testing of the tests; set in profile -->
 							<skipTests>${mvn.skipUnitTests}</skipTests>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- to configure integration-test-runner plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
+					<argLine>-Dfile.encoding=UTF-8</argLine>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<skipTests>${mvn.skipIntegrationTests}</skipTests>
 						</configuration>
 					</execution>
 				</executions>
