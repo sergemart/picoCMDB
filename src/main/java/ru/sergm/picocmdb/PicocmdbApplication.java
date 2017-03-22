@@ -30,6 +30,6 @@ public class PicocmdbApplication
 	public static void main(String[] args) {
 		SpringApplication.run(PicocmdbApplication.class, args);
 		LOG.info("{} started, logging is functional", PicocmdbApplication.class.toString());
-		LOG.info("DATABASE_URL set to: {}", System.getProperty("DATABASE_URL"));
+		LOG.info("DATABASE_URL set to: {}", System.getenv("DATABASE_URL"));
 	}
 }
