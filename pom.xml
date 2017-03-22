@@ -45,7 +45,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		<dependency>
+		<!dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -72,7 +72,7 @@
 
 	<build>
 		<resources>
-			<!-- setup resources plugin to filter the dir which contains application.properties file, to replace maven-related properties there -->
+			<!-- setup resources plugin to filter the dir which contains application.properties file, to replace maven-set properties there -->
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
