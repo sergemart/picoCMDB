@@ -22,8 +22,17 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<!-- Turn off default maven-deploy-plugin -->
+		<!-- turn off default maven-deploy-plugin -->
 		<maven.deploy.skip>true</maven.deploy.skip>
+		<!-- custom properties -->
+			<!-- to configure Tomcat deployment -->
+		<mvn.tomcat.url>stub</mvn.tomcat.url> 								<!-- set in a profile -->
+		<mvn.tomcat.username>stub</mvn.tomcat.username> 					<!-- set in a profile -->
+		<mvn.tomcat.password>stub</mvn.tomcat.password>						<!-- set in a profile -->
+			<!-- to rewrite placeholders in application.properties -->
+		<mvn.datasource.url>stub</mvn.datasource.url>						<!-- set in a profile -->
+		<mvn.datasource.username>stub</mvn.datasource.username>				<!-- set in a profile -->
+		<mvn.datasource.password>stub</mvn.datasource.password>				<!-- set in a profile -->
 	</properties>
 
 	<dependencies>
@@ -71,18 +80,41 @@
 		</resources>
 
 		<plugins>
+			<!-- to configure default test-runner plugin -->
 			<plugin>
-				<!-- to configure default test-runner plugin -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
-					<systemPropertyVariables>
-						<file.encoding>UTF-8</file.encoding>
-					</systemPropertyVariables>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<!-- to configure Tomcat deployment -->
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+						<url>${mvn.tomcat.url}</url>
+						<update>true</update>
+						<username>${mvn.tomcat.username}</username>
+						<password>${mvn.tomcat.password}</password>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>deploy</phase>
+							<goals>
+								<goal>redeploy</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<profiles>
@@ -131,6 +163,9 @@
 			</activation>
 			<properties>
 				<packaging.type>war</packaging.type>
+				<mvn.tomcat.url>http://localhost:8080/manager/text</mvn.tomcat.url>
+				<mvn.tomcat.username>maven</mvn.tomcat.username>
+				<mvn.tomcat.password>maven</mvn.tomcat.password>
 				<!-- properties to rewrite placeholders in application.properties -->
 				<mvn.datasource.url>jdbc:mysql://localhost:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
@@ -149,7 +184,7 @@
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
-						<version>2.2</version>
+						<!--version>2.2</version>
 						<configuration>
 							<url>http://localhost:8080/manager/text</url>
 							<update>true</update>
@@ -163,7 +198,7 @@
 									<goal>redeploy</goal>
 								</goals>
 							</execution>
-						</executions>
+						</executions-->
 					</plugin>
 				</plugins>
 			</build>
@@ -177,6 +212,9 @@
 			</activation>
 			<properties>
 				<packaging.type>war</packaging.type>
+				<mvn.tomcat.url>http://tomcat.igelkott:8080/manager/text</mvn.tomcat.url>
+				<mvn.tomcat.username>maven</mvn.tomcat.username>
+				<mvn.tomcat.password>maven</mvn.tomcat.password>
 				<!-- properties to rewrite placeholders in application.properties -->
 				<mvn.datasource.url>jdbc:mysql://mysql.igelkott:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
@@ -195,7 +233,7 @@
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
-						<version>2.2</version>
+						<!--version>2.2</version>
 						<configuration>
 							<url>http://tomcat:8080/manager/text</url>
 							<update>true</update>
@@ -209,7 +247,7 @@
 									<goal>redeploy</goal>
 								</goals>
 							</execution>
-						</executions>
+						</executions-->
 					</plugin>
 				</plugins>
 			</build>
