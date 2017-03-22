@@ -278,8 +278,8 @@
 			</activation>
 			<properties>
 				<packaging.type>war</packaging.type>
-				<mvn.skipUnitTests>true</mvn.skipUnitTests>
-				<mvn.skipIntegrationTests>true</mvn.skipIntegrationTests>
+				<mvn.skipUnitTests>false</mvn.skipUnitTests>
+				<mvn.skipIntegrationTests>false</mvn.skipIntegrationTests>
 				<mvn.tomcat.url>http://tomcat.igelkott:8080/manager/text</mvn.tomcat.url>
 				<mvn.tomcat.username>maven</mvn.tomcat.username>
 				<mvn.tomcat.password>maven</mvn.tomcat.password>
