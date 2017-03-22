@@ -1,4 +1,3 @@
-/* Heroku manifest */
 {
   "name": "picoCMDB",
   "description": "А primitive CMDB to keep track of multi-component application or system",
