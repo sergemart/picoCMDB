@@ -3,13 +3,14 @@ package ru.sergm.picocmdb.domain;
 import javax.persistence.*;
 
 @Entity
-public class Dummy {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private String description;
+	private boolean isSystem;
 
 
     public Long getId() {
@@ -35,5 +36,14 @@ public class Dummy {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public boolean isSystem() {
+		return isSystem;
+	}
+
+	public void setSystem(boolean system) {
+		isSystem = system;
+	}
+
 }
 

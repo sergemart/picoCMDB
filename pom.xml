@@ -138,6 +138,8 @@
 					<verbose>true</verbose>
 					<dropFirst>false</dropFirst>
 					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
+					<databaseChangeLogTableName>db_changelog</databaseChangeLogTableName>
+					<databaseChangeLogLockTableName>db_changelog_lock</databaseChangeLogLockTableName>
 				</configuration>
 				<executions>
 					<execution>

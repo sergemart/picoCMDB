@@ -5,7 +5,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 	<changeSet id="2017032300" author="SergM">
-		<createTable tableName="Role">
+		<createTable tableName="role">
 			<column name="id" type="BIGINT" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false"/>
 			</column>
@@ -16,45 +16,45 @@
 				<constraints unique="true" nullable="false"/>
 			</column>
 		</createTable>
-		<comment>Add 'Role' table</comment>
+		<comment>Add 'role' table</comment>
 	</changeSet>
 
 	<changeSet id="2017032301" author="SergM">
-		<modifyDataType tableName="Role" columnName="name" newDataType="java.sql.Types.NVARCHAR(100)"/>
-		<modifyDataType tableName="Role" columnName="description" newDataType="java.sql.Types.NVARCHAR(200)"/>
-		<comment>Modify 'Role' columns.</comment>
+		<modifyDataType tableName="role" columnName="name" newDataType="java.sql.Types.NVARCHAR(100)"/>
+		<modifyDataType tableName="role" columnName="description" newDataType="java.sql.Types.NVARCHAR(200)"/>
+		<comment>Modify 'role' columns.</comment>
 	</changeSet>
 
 	<changeSet id="2017032302" author="SergM">
-		<addNotNullConstraint tableName="Role" columnName="name" columnDataType="java.sql.Types.NVARCHAR(100)"/>
-		<comment>Modify 'Role' column which has been reset to NULLABLE due to Liquibase bug.</comment>
+		<addNotNullConstraint tableName="role" columnName="name" columnDataType="java.sql.Types.NVARCHAR(100)"/>
+		<comment>Modify 'role' column which has been reset to NULLABLE due to Liquibase bug.</comment>
 	</changeSet>
 
 	<changeSet id="2017032303" author="SergM">
-		<addColumn tableName="Role">
+		<addColumn tableName="role">
 			<column name="is_system" type="java.sql.Types.BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
 		</addColumn>
-		<comment>Add column to 'Role' to mark role as system.</comment>
+		<comment>Add column to 'role' to mark role as system.</comment>
 	</changeSet>
 
 	<changeSet id="2017032304" author="SergM">
-		<insert tableName="Role">
+		<insert tableName="role">
 			<column name="name">admin</column>
 			<column name="description">Built-in administrative role.</column>
 			<column name="is_system" valueBoolean="true"/>
 		</insert>
-		<insert tableName="Role">
+		<insert tableName="role">
 			<column name="name">project1</column>
 			<column name="description">Project One development team.</column>
 			<column name="is_system" valueBoolean="true"/>
 		</insert>
-		<comment>Add basic roles into 'Role'.</comment>
+		<comment>Add basic roles into 'role'.</comment>
 	</changeSet>
 
 	<changeSet id="2017032305" author="SergM">
-		<update tableName="Role">
+		<update tableName="role">
 			<column name="is_system" valueBoolean="false"/>
 			<where>'name' = 'project1'</where>
 		</update>
@@ -62,7 +62,7 @@
 	</changeSet>
 
 	<changeSet id="2017032306" author="SergM">
-		<update tableName="Role">
+		<update tableName="role">
 			<column name="is_system" valueBoolean="false"/>
 			<where>name = 'project1'</where>
 		</update>
