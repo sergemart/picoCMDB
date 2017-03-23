@@ -31,5 +31,6 @@ public class PicocmdbApplication
 		SpringApplication.run(PicocmdbApplication.class, args);
 		LOG.info("DATABASE_URL environment variable set to: {}", System.getenv("DATABASE_URL"));
 		LOG.info("JDBC_DATABASE_URL environment variable set to: {}", System.getenv("JDBC_DATABASE_URL"));
+		LOG.info("limits-props environment variable set to: {}", System.getenv("limits-props"));
 	}
 }
