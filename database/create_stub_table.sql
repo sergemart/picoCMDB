@@ -1,0 +1,28 @@
+CREATE DATABASE IF NOT EXISTS `picocmdb` DEFAULT CHARACTER SET utf8;
+USE `picocmdb`;
+
+SET FOREIGN_KEY_CHECKS=0;
+
+DROP TABLE IF EXISTS `Dummy` CASCADE;
+
+CREATE TABLE `Dummy` (
+	`id` BIGINT NOT NULL AUTO_INCREMENT,
+	`name` NVARCHAR(50) 	 NULL,
+	`description` NVARCHAR(100) 	 NULL,
+	CONSTRAINT `PK_Dummy` PRIMARY KEY (`id` ASC)
+);
+
+ALTER TABLE `Dummy`
+ ADD CONSTRAINT `UQ_name` UNIQUE (`name` ASC)
+;
+
+SET FOREIGN_KEY_CHECKS=1;
+
+LOCK TABLES `Dummy` WRITE;
+ALTER TABLE `Dummy` DISABLE KEYS;
+INSERT INTO `Dummy` VALUES
+	(1,'dummy_one','dummy_one_comments'),
+	(2,'dummy_two','dummy_two_comments')
+;
+ALTER TABLE `Dummy` ENABLE KEYS;
+UNLOCK TABLES;

@@ -20,6 +20,7 @@ public class PicocmdbApplication
 
 	private static final Logger LOG = LoggerFactory.getLogger(PicocmdbApplication.class);
 
+
 	// to run on Tomcat
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
