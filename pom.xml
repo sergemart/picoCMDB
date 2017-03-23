@@ -227,8 +227,8 @@
 				<packaging.type>jar</packaging.type>
 				<mvn.skipUnitTests>true</mvn.skipUnitTests>
 				<mvn.skipIntegrationTests>true</mvn.skipIntegrationTests>
-				<!-- properties to rewrite placeholders in application.properties -->
-				<mvn.datasource.url>jdbc:${env.DATABASE_URL}?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url>
+				<!--mvn.datasource.url>jdbc:${env.DATABASE_URL}?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url-->
+				<mvn.datasource.url>${env.JDBC_DATABASE_URL}</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 				<mvn.datasource.driverClass>org.postgresql.Driver</mvn.datasource.driverClass> <!-- for liquibase.properties -->
