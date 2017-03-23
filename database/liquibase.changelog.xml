@@ -2,6 +2,72 @@
 		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+	<changeSet id="2017032300" author="SergM">
+		<createTable tableName="Role">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="NVARCHAR(100)">
+				<constraints unique="true" nullable="false"/>
+			</column>
+			<column name="description" type="NVARCHAR(200)">
+				<constraints unique="true" nullable="false"/>
+			</column>
+		</createTable>
+		<comment>Add 'Role' table</comment>
+	</changeSet>
+
+	<changeSet id="2017032301" author="SergM">
+		<modifyDataType tableName="Role" columnName="name" newDataType="java.sql.Types.NVARCHAR(100)"/>
+		<modifyDataType tableName="Role" columnName="description" newDataType="java.sql.Types.NVARCHAR(200)"/>
+		<comment>Modify 'Role' columns.</comment>
+	</changeSet>
+
+	<changeSet id="2017032302" author="SergM">
+		<addNotNullConstraint tableName="Role" columnName="name" columnDataType="java.sql.Types.NVARCHAR(100)"/>
+		<comment>Modify 'Role' column which has been reset to NULLABLE due to Liquibase bug.</comment>
+	</changeSet>
+
+	<changeSet id="2017032303" author="SergM">
+		<addColumn tableName="Role">
+			<column name="is_system" type="java.sql.Types.BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<comment>Add column to 'Role' to mark role as system.</comment>
+	</changeSet>
+
+	<changeSet id="2017032304" author="SergM">
+		<insert tableName="Role">
+			<column name="name">admin</column>
+			<column name="description">Built-in administrative role.</column>
+			<column name="is_system" valueBoolean="true"/>
+		</insert>
+		<insert tableName="Role">
+			<column name="name">project1</column>
+			<column name="description">Project One development team.</column>
+			<column name="is_system" valueBoolean="true"/>
+		</insert>
+		<comment>Add basic roles into 'Role'.</comment>
+	</changeSet>
+
+	<changeSet id="2017032305" author="SergM">
+		<update tableName="Role">
+			<column name="is_system" valueBoolean="false"/>
+			<where>'name' = 'project1'</where>
+		</update>
+		<comment>Fix wrong inserted value for 'project1' role.</comment>
+	</changeSet>
+
+	<changeSet id="2017032306" author="SergM">
+		<update tableName="Role">
+			<column name="is_system" valueBoolean="false"/>
+			<where>name = 'project1'</where>
+		</update>
+		<comment>Fix wrong inserted value for 'project1' role, attempt 2.</comment>
+	</changeSet>
+
 
 </databaseChangeLog>

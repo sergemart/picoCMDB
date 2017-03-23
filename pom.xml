@@ -36,7 +36,6 @@
 		<mvn.datasource.username>stub</mvn.datasource.username>				<!-- set in a profile -->
 		<mvn.datasource.password>stub</mvn.datasource.password>				<!-- set in a profile -->
 		<mvn.datasource.driverClass>stub</mvn.datasource.driverClass>		<!-- set in a profile; for liquibase.properties -->
-		<!--mvn.liquibase.changelog>database/liquibase.changelog.xml</mvn.liquibase.changelog-->		<!-- set in a profile; for liquibase.properties -->
 	</properties>
 
 	<dependencies>
@@ -134,8 +133,8 @@
 					<changeLogFile>database/liquibase.changelog.xml</changeLogFile>
 					<driver>${mvn.datasource.driverClass}</driver> <!-- set in a profile -->
 					<url>${mvn.datasource.url}</url> <!-- set in a profile -->
-					<username>${mvn.datasource.username}</username>
-					<password>${mvn.datasource.password}</password>
+					<username>${mvn.datasource.username}</username> <!-- set in a profile -->
+					<password>${mvn.datasource.password}</password> <!-- set in a profile -->
 					<verbose>true</verbose>
 					<dropFirst>false</dropFirst>
 					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
@@ -192,7 +191,7 @@
 				<mvn.datasource.url>jdbc:mysql://localhost:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
-				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> <!-- for liquibase.properties -->
+				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> <!-- for Liquibase properties -->
 			</properties>
 			<dependencies>
 				<dependency>
@@ -234,11 +233,10 @@
 				<packaging.type>jar</packaging.type>
 				<mvn.skipUnitTests>true</mvn.skipUnitTests>
 				<mvn.skipIntegrationTests>true</mvn.skipIntegrationTests>
-				<!--mvn.datasource.url>jdbc:${env.DATABASE_URL}?useUnicode=yes&amp;characterEncoding=UTF-8</mvn.datasource.url-->
 				<mvn.datasource.url>${env.JDBC_DATABASE_URL}</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
-				<mvn.datasource.driverClass>org.postgresql.Driver</mvn.datasource.driverClass> <!-- for liquibase.properties -->
+				<mvn.datasource.driverClass>org.postgresql.Driver</mvn.datasource.driverClass> <!-- for Liquibase properties -->
 			</properties>
 			<dependencies>
 				<dependency>
@@ -273,7 +271,7 @@
 				<mvn.datasource.url>jdbc:mysql://localhost:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
-				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> 	<!-- for liquibase.properties -->
+				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> 	<!-- for Liquibase properties -->
 			</properties>
 			<dependencies>
 				<dependency>
@@ -314,7 +312,7 @@
 				<mvn.datasource.url>jdbc:mysql://mysql.igelkott:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
-				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> <!-- for liquibase.properties -->
+				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> <!-- for Liquibase properties -->
 			</properties>
 			<dependencies>
 				<dependency>
