@@ -36,6 +36,7 @@
 		<mvn.datasource.username>stub</mvn.datasource.username>				<!-- set in a profile -->
 		<mvn.datasource.password>stub</mvn.datasource.password>				<!-- set in a profile -->
 		<mvn.datasource.driverClass>stub</mvn.datasource.driverClass>		<!-- set in a profile; for liquibase.properties -->
+		<mvn.hibernate.dialect>stub</mvn.hibernate.dialect>					<!-- set in a profile -->
 	</properties>
 
 	<dependencies>
@@ -194,6 +195,7 @@
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> <!-- for Liquibase properties -->
+				<mvn.hibernate.dialect>org.hibernate.dialect.MySQL5Dialect</mvn.hibernate.dialect>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -235,15 +237,17 @@
 				<packaging.type>jar</packaging.type>
 				<mvn.skipUnitTests>true</mvn.skipUnitTests>
 				<mvn.skipIntegrationTests>true</mvn.skipIntegrationTests>
-				<mvn.datasource.url>${env.JDBC_DATABASE_URL}</mvn.datasource.url>
+				<mvn.datasource.url>${env.JDBC_DATABASE_URL}</mvn.datasource.url> <!-- environment variable provided by Heroku container -->
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 				<mvn.datasource.driverClass>org.postgresql.Driver</mvn.datasource.driverClass> <!-- for Liquibase properties -->
+				<mvn.hibernate.dialect>org.hibernate.dialect.PostgreSQL94Dialect</mvn.hibernate.dialect>
 			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
+					<version>9.4-1201-jdbc4</version>
 				</dependency>
 			</dependencies>
 			<build>
@@ -274,6 +278,7 @@
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> 	<!-- for Liquibase properties -->
+				<mvn.hibernate.dialect>org.hibernate.dialect.MySQL5Dialect</mvn.hibernate.dialect>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -315,6 +320,7 @@
 				<mvn.datasource.username>root</mvn.datasource.username>
 				<mvn.datasource.password>root</mvn.datasource.password>
 				<mvn.datasource.driverClass>com.mysql.jdbc.Driver</mvn.datasource.driverClass> <!-- for Liquibase properties -->
+				<mvn.hibernate.dialect>org.hibernate.dialect.MySQL5Dialect</mvn.hibernate.dialect>
 			</properties>
 			<dependencies>
 				<dependency>
