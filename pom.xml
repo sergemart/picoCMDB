@@ -36,7 +36,7 @@
 		<mvn.datasource.username>stub</mvn.datasource.username>				<!-- set in a profile -->
 		<mvn.datasource.password>stub</mvn.datasource.password>				<!-- set in a profile -->
 		<mvn.datasource.driverClass>stub</mvn.datasource.driverClass>		<!-- set in a profile; for liquibase.properties -->
-		<mvn.liquibase.changelog>database/liquibase.changelog.xml</mvn.liquibase.changelog>		<!-- set in a profile; for liquibase.properties -->
+		<!--mvn.liquibase.changelog>database/liquibase.changelog.xml</mvn.liquibase.changelog-->		<!-- set in a profile; for liquibase.properties -->
 	</properties>
 
 	<dependencies>
@@ -131,7 +131,13 @@
 				<artifactId>liquibase-maven-plugin</artifactId>
 				<version>3.5.3</version> <!-- shoud be greater than schema version declared in changelog XML file -->
 				<configuration>
-					<propertyFile>target/classes/liquibase.properties</propertyFile> <!-- filtered resource -->
+					<changeLogFile>database/liquibase.changelog.xml</changeLogFile>
+					<driver>${mvn.datasource.driverClass}</driver> <!-- set in a profile -->
+					<url>${mvn.datasource.url}</url> <!-- set in a profile -->
+					<username>${mvn.datasource.username}</username>
+					<password>${mvn.datasource.password}</password>
+					<verbose>true</verbose>
+					<dropFirst>false</dropFirst>
 					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
 				</configuration>
 				<executions>
