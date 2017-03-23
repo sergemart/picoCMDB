@@ -132,6 +132,7 @@
 				<version>3.5.3</version> <!-- shoud be greater than schema version declared in changelog XML file -->
 				<configuration>
 					<propertyFile>target/classes/liquibase.properties</propertyFile> <!-- filtered resource -->
+					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
 				</configuration>
 				<executions>
 					<execution>
