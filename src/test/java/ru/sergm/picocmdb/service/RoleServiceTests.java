@@ -49,7 +49,7 @@ public class RoleServiceTests {
 
 
 	@Test
-	public void getAllRoles_Should_Return_Role_List() {
+	public void getAllRoles_Returns_Role_List() {
 		// ARRANGE: to stub methods in the mocks
 		given(role.getName()).willReturn("dummy");
 		given(role2.getName()).willReturn("dummy2");
@@ -65,7 +65,7 @@ public class RoleServiceTests {
 
 
 	@Test
-	public void getRole_Should_Return_Role() throws NoSuchRoleException {
+	public void getRole_Returns_Role() throws NoSuchRoleException {
 		// ARRANGE: to stub methods in the mocks
 		given(role.getName()).willReturn("dummy");
 		given(roleDao.findByName("dummy")).willReturn(role);
@@ -78,7 +78,7 @@ public class RoleServiceTests {
 
 
 	@Test(expected = NoSuchRoleException.class)
-	public void getRole_Should_Report_When_No_Such_Role() throws NoSuchRoleException {
+	public void getRole_Reports_When_No_Such_Role() throws NoSuchRoleException {
 		// ARRANGE: to stub methods in the mocks
 		given(roleDao.findByName("dummy")).willReturn(null);
 		// ACT
