@@ -13,13 +13,13 @@ import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.List;
+
 import ru.sergm.picocmdb.dao.RoleDao;
 import ru.sergm.picocmdb.domain.Role;
 import ru.sergm.picocmdb.exception.NoSuchRoleException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 @RunWith(SpringRunner.class)
@@ -35,7 +35,7 @@ public class RoleServiceTests {
 
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		MockitoAnnotations.initMocks(this); // to init generic Mockito's @Mock(s), if any
 	}
 
