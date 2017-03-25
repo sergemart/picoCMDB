@@ -79,83 +79,77 @@
 		</resources>
 
 		<plugins>
-			<!-- SUREFIRE; to configure unit-test-runner plugin -->
+			<!-- SUREFIRE; to run unit tests -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
-					<argLine>-Dfile.encoding=UTF-8</argLine>
-				</configuration>
-				<executions>
-					<execution>
-						<id>default-test</id>	<!-- to override built-in execution w/ same name -->
-						<phase>test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<!-- turn on/off testing of the tests; set in profile -->
-							<skipTests>${mvn.skipUnitTests}</skipTests>
-						</configuration>
-					</execution>
-				</executions>
+				<!-- plugin config defined in pluginManagement section -->
 			</plugin>
 
-			<!-- FAILSAFE; to configure integration-test-runner plugin -->
+			<!-- FAILSAFE; run integration tests -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.18.1</version>
-				<configuration>
-					<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
-					<argLine>-Dfile.encoding=UTF-8</argLine>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-						<configuration>
-							<skipTests>${mvn.skipIntegrationTests}</skipTests>
-						</configuration>
-					</execution>
-				</executions>
+				<!-- plugin config defined in pluginManagement section -->
 			</plugin>
 
 			<!-- LIQUIBASE; to maintain database updates -->
 			<plugin>
 				<groupId>org.liquibase</groupId>
 				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>3.5.3</version> <!-- shoud be greater than schema version declared in changelog XML file -->
-				<configuration>
-					<changeLogFile>database/liquibase.changelog.xml</changeLogFile>
-					<driver>${mvn.datasource.driverClass}</driver> <!-- set in a profile -->
-					<url>${mvn.datasource.url}</url> <!-- set in a profile -->
-					<username>${mvn.datasource.username}</username> <!-- set in a profile -->
-					<password>${mvn.datasource.password}</password> <!-- set in a profile -->
-					<verbose>true</verbose>
-					<dropFirst>false</dropFirst>
-					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
-					<databaseChangeLogTableName>db_changelog</databaseChangeLogTableName>
-					<databaseChangeLogLockTableName>db_changelog_lock</databaseChangeLogLockTableName>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-					</execution>
-				</executions>
+				<!-- plugin config defined in pluginManagement section -->
 			</plugin>
 		</plugins>
 
 		<pluginManagement>
 			<plugins>
-				<!-- TOMCAT7; to configure Tomcat deployment -->
+				<!-- SUREFIRE; to run unit tests; invoked always -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
+						<argLine>-Dfile.encoding=UTF-8</argLine>
+					</configuration>
+					<executions>
+						<execution>
+							<id>default-test</id>	<!-- to override built-in execution w/ same name -->
+							<phase>test</phase>
+							<goals>
+								<goal>test</goal>
+							</goals>
+							<configuration>
+								<!-- turn on/off testing of the tests; set in profile -->
+								<skipTests>${mvn.skipUnitTests}</skipTests>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- FAILSAFE; to run integration tests; invoked always -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.18.1</version>
+					<configuration>
+						<!-- to pass JVM the correct encoding which corresponds to Spring Boot encoding settings -->
+						<argLine>-Dfile.encoding=UTF-8</argLine>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<skipTests>${mvn.skipIntegrationTests}</skipTests>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- TOMCAT7; to deploy to Tomcat; invoked in *-WAR profiles -->
 				<plugin>
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
@@ -174,6 +168,54 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+
+				<!-- LIQUIBASE; to maintain database updates; invoked always -->
+				<plugin>
+					<groupId>org.liquibase</groupId>
+					<artifactId>liquibase-maven-plugin</artifactId>
+					<version>3.5.3</version> <!-- shoud be greater than schema version declared in changelog XML file -->
+					<configuration>
+						<changeLogFile>database/liquibase.changelog.xml</changeLogFile>
+						<driver>${mvn.datasource.driverClass}</driver> <!-- set in a profile -->
+						<url>${mvn.datasource.url}</url> <!-- set in a profile -->
+						<username>${mvn.datasource.username}</username> <!-- set in a profile -->
+						<password>${mvn.datasource.password}</password> <!-- set in a profile -->
+						<verbose>true</verbose>
+						<dropFirst>false</dropFirst>
+						<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
+						<databaseChangeLogTableName>db_changelog</databaseChangeLogTableName>
+						<databaseChangeLogLockTableName>db_changelog_lock</databaseChangeLogLockTableName>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>update</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- SQL; to deploy model (reference) database; invoke it manually in dev-JAR profile -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sql-maven-plugin</artifactId>
+					<version>1.5</version>
+					<dependencies>
+						<dependency>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+							<version>5.1.41</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<driver>com.mysql.jdbc.Driver</driver>
+						<!-- points to model (reference) database, not that application uses -->
+						<url>jdbc:mysql://localhost:3306/picocmdb-model?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</url>
+						<username>root</username>
+						<password>root</password>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -205,8 +247,8 @@
 			</dependencies>
 			<build>
 				<plugins>
+					<!-- SPRING-BOOT; to make and control an executable jar -->
 					<plugin>
-						<!-- to make and control an executable jar -->
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration>
@@ -222,6 +264,12 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+					<!-- SQL; to deploy model (reference) database; unbound from Maven workflow, invoke when needed with sql:execute -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>sql-maven-plugin</artifactId>
+						<!-- plugin config defined in pluginManagement section -->
 					</plugin>
 				</plugins>
 			</build>
@@ -294,6 +342,7 @@
 			</dependencies>
 			<build>
 				<plugins>
+					<!-- TOMCAT7; to deploy to Tomcat -->
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
@@ -336,6 +385,7 @@
 			</dependencies>
 			<build>
 				<plugins>
+					<!-- TOMCAT7; to deploy to Tomcat -->
 					<plugin>
 						<groupId>org.apache.tomcat.maven</groupId>
 						<artifactId>tomcat7-maven-plugin</artifactId>
