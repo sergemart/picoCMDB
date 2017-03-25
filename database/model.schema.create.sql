@@ -1,0 +1,28 @@
+CREATE DATABASE IF NOT EXISTS `picocmdb-model` DEFAULT CHARACTER SET utf8
+;
+USE `picocmdb-model`
+;
+
+SET FOREIGN_KEY_CHECKS=0 
+;
+
+DROP TABLE IF EXISTS `role` CASCADE
+;
+
+CREATE TABLE `role`
+(
+	`id` BIGINT NOT NULL AUTO_INCREMENT,
+	`name` NVARCHAR(100) NOT NULL,
+	`description` NVARCHAR(200) 	 NULL,
+	`is_system` BIT(1) NOT NULL,
+	CONSTRAINT `PK_role` PRIMARY KEY (`id` ASC)
+)
+
+;
+
+ALTER TABLE `role` 
+ ADD CONSTRAINT `UQ_name` UNIQUE (`name` ASC)
+;
+
+SET FOREIGN_KEY_CHECKS=1 
+;

@@ -37,6 +37,13 @@
 		<mvn.datasource.password>stub</mvn.datasource.password>				<!-- set in a profile -->
 		<mvn.datasource.driverClass>stub</mvn.datasource.driverClass>		<!-- set in a profile; for liquibase.properties -->
 		<mvn.hibernate.dialect>stub</mvn.hibernate.dialect>					<!-- set in a profile -->
+			<!-- for model-to-liquibase diff generation workflow -->
+		<mvn.model.datasource.url>jdbc:mysql://localhost:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.model.datasource.url>
+		<mvn.model.datasource.username>root</mvn.model.datasource.username>
+		<mvn.model.datasource.password>root</mvn.model.datasource.password>
+		<mvn.model.datasource.driverClass>com.mysql.jdbc.Driver</mvn.model.datasource.driverClass>
+		<mvn.model.schema.drop.script>database\model.schema.drop.sql</mvn.model.schema.drop.script>
+		<mvn.model.schema.create.script>database\model.schema.create.sql</mvn.model.schema.create.script>
 	</properties>
 
 	<dependencies>
@@ -186,6 +193,7 @@
 						<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
 						<databaseChangeLogTableName>db_changelog</databaseChangeLogTableName>
 						<databaseChangeLogLockTableName>db_changelog_lock</databaseChangeLogLockTableName>
+						<referenceUrl></referenceUrl>
 					</configuration>
 					<executions>
 						<execution>
@@ -210,11 +218,16 @@
 						</dependency>
 					</dependencies>
 					<configuration>
-						<driver>com.mysql.jdbc.Driver</driver>
+						<driver>${mvn.model.datasource.driverClass}</driver>
 						<!-- points to model (reference) database, not that application uses -->
-						<url>jdbc:mysql://localhost:3306/picocmdb-model?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</url>
-						<username>root</username>
-						<password>root</password>
+						<url>${mvn.model.datasource.url}</url>
+						<username>${mvn.datasource.username}</username>
+						<password>${mvn.datasource.password}</password>
+						<autocommit>true</autocommit>
+						<srcFiles>
+							<srcFile>${mvn.model.schema.drop.script}</srcFile>
+							<srcFile>${mvn.model.schema.create.script}</srcFile>
+						</srcFiles>
 					</configuration>
 				</plugin>
 			</plugins>
