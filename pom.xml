@@ -193,7 +193,10 @@
 						<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
 						<databaseChangeLogTableName>db_changelog</databaseChangeLogTableName>
 						<databaseChangeLogLockTableName>db_changelog_lock</databaseChangeLogLockTableName>
-						<referenceUrl></referenceUrl>
+						<referenceUrl>${mvn.model.datasource.url}</referenceUrl>
+						<referenceUsername>${mvn.model.datasource.username}</referenceUsername>
+						<referencePassword>${mvn.model.datasource.password}</referencePassword>
+						<diffChangeLogFile>database/liquibase.changelog.diff.xml</diffChangeLogFile>
 					</configuration>
 					<executions>
 						<execution>
