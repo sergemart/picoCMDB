@@ -74,6 +74,51 @@
 		<comment>Fix wrong UQ constraint.</comment>
 	</changeSet>
 
+	<!-- change primary key field from num to text; replace content to appropriate one -->
+
+	<!--  -->
+
+	<changeSet author="SergM" id="2017032601">
+		<delete tableName="role">
+			<where>1=1</where>
+		</delete>
+		<comment>Clear 'role' table.</comment>
+	</changeSet>
+
+	<!-- from model -->
+
+	<changeSet author="SergM (generated)" id="1490549820809-1">
+		<dropUniqueConstraint constraintName="name" tableName="role"/>
+		<comment>Change primary key field from num to text, part 1.</comment>
+	</changeSet>
+
+	<changeSet author="SergM (generated)" id="1490549820809-2">
+		<dropColumn columnName="name" tableName="role"/>
+		<comment>Change primary key field from num to text, part 2.</comment>
+	</changeSet>
+
+	<changeSet author="SergM (generated)" id="1490549820809-3">
+		<modifyDataType columnName="id" newDataType="varchar(50)" tableName="role"/>
+		<comment>Change primary key field from num to text, part 3.</comment>
+	</changeSet>
+
+	<!--  -->
+
+	<changeSet author="SergM" id="2017032602">
+		<insert tableName="role">
+			<column name="id">ADMINISTRATOR</column>
+			<column name="description">Built-in administrative role.</column>
+			<column name="is_system" valueBoolean="true"/>
+		</insert>
+		<insert tableName="role">
+			<column name="id">READER</column>
+			<column name="description">Built-in read-only role.</column>
+			<column name="is_system" valueBoolean="true"/>
+		</insert>
+		<comment>Add basic roles into 'role'.</comment>
+	</changeSet>
+
+
 
 
 </databaseChangeLog>
