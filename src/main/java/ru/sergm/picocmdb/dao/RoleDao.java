@@ -6,12 +6,12 @@ import java.util.List;
 import ru.sergm.picocmdb.domain.Role;
 
 
-public interface RoleDao extends CrudRepository <Role, Long> {
+public interface RoleDao extends CrudRepository <Role, String> {
 
 	List<Role> findAll();
 
-	Role findByName(String name);
+	Role findById(String id);
 
-	void deleteByName(String name);
+	void deleteById(String id);
 
 }

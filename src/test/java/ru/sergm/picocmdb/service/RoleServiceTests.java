@@ -51,40 +51,40 @@ public class RoleServiceTests {
 	@Test
 	public void getAllRoles_Returns_Role_List() {
 		// ARRANGE: to stub methods in the mocks
-		given(role.getName()).willReturn("dummy");
-		given(role2.getName()).willReturn("dummy2");
+		given(role.getId()).willReturn("dummy");
+		given(role2.getId()).willReturn("dummy2");
 		List<Role> result = Arrays.asList(role, role2);
 		given(roleDao.findAll()).willReturn(result);
 		//ACT
 		roleService.getAllRoles();
 		// ASSERT: to verify that correct DAO method is called req num of times and with req arguments
 		verify(roleDao, times(1)).findAll();
-		assertEquals("dummy", roleService.getAllRoles().get(0).getName());
-		assertEquals("dummy2", roleService.getAllRoles().get(1).getName());
+		assertEquals("dummy", roleService.getAllRoles().get(0).getId());
+		assertEquals("dummy2", roleService.getAllRoles().get(1).getId());
 	}
 
 
 	@Test
 	public void getRole_Returns_Role() throws NoSuchRoleException {
 		// ARRANGE: to stub methods in the mocks
-		given(role.getName()).willReturn("dummy");
-		given(roleDao.findByName("dummy")).willReturn(role);
+		given(role.getId()).willReturn("dummy");
+		given(roleDao.findById("dummy")).willReturn(role);
 		//ACT
 		roleService.getRole("dummy");
 		// ASSERT: to verify that correct DAO method is called req num of times and with req arguments
-		verify(roleDao, times(1)).findByName("dummy");
-		assertEquals("dummy", roleService.getRole("dummy").getName());
+		verify(roleDao, times(1)).findById("dummy");
+		assertEquals("dummy", roleService.getRole("dummy").getId());
 	}
 
 
 	@Test(expected = NoSuchRoleException.class)
 	public void getRole_Reports_When_No_Such_Role() throws NoSuchRoleException {
 		// ARRANGE: to stub methods in the mocks
-		given(roleDao.findByName("dummy")).willReturn(null);
+		given(roleDao.findById("dummy")).willReturn(null);
 		// ACT
 		roleService.getRole("dummy");
 		// ASSERT: to verify that correct DAO method is called req num of times and with req arguments
-		verify(roleDao, times(1)).findByName("dummy");
+		verify(roleDao, times(1)).findById("dummy");
 	}
 
 }

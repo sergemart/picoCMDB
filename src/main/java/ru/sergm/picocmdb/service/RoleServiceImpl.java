@@ -22,8 +22,8 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 
-	public Role getRole(String roleName) throws NoSuchRoleException {
-		Role result =  roleDao.findByName(roleName);
+	public Role getRole(String roleId) throws NoSuchRoleException {
+		Role result =  roleDao.findById(roleId);
 		if (result == null) throw new NoSuchRoleException();
 		return result;
 	}

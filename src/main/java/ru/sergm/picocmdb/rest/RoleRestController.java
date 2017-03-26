@@ -27,8 +27,8 @@ public class RoleRestController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{roleName}")
-    public Role confirmAppointment(@PathVariable("roleName") String roleName) throws NoSuchRoleException {
-        return roleService.getRole(roleName);
+    @RequestMapping(method = RequestMethod.GET, path = "/{roleId}")
+    public Role getRole(@PathVariable("roleId") String roleId) throws NoSuchRoleException {
+        return roleService.getRole(roleId.toUpperCase());
     }
 }
