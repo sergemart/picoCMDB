@@ -38,7 +38,7 @@
 		<mvn.datasource.driverClass>stub</mvn.datasource.driverClass>		<!-- set in a profile; for liquibase.properties -->
 		<mvn.hibernate.dialect>stub</mvn.hibernate.dialect>					<!-- set in a profile -->
 			<!-- for model-to-liquibase diff generation workflow -->
-		<mvn.model.datasource.url>jdbc:mysql://localhost:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.model.datasource.url>
+		<mvn.model.datasource.url>jdbc:mysql://localhost:3306/picocmdb-model?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.model.datasource.url>
 		<mvn.model.datasource.username>root</mvn.model.datasource.username>
 		<mvn.model.datasource.password>root</mvn.model.datasource.password>
 		<mvn.model.datasource.driverClass>com.mysql.jdbc.Driver</mvn.model.datasource.driverClass>
@@ -188,15 +188,16 @@
 						<url>${mvn.datasource.url}</url> <!-- set in a profile -->
 						<username>${mvn.datasource.username}</username> <!-- set in a profile -->
 						<password>${mvn.datasource.password}</password> <!-- set in a profile -->
-						<verbose>true</verbose>
+						<verbose>false</verbose>
 						<dropFirst>false</dropFirst>
+						<outputFileEncoding>UTF-8</outputFileEncoding>
 						<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
 						<databaseChangeLogTableName>db_changelog</databaseChangeLogTableName>
 						<databaseChangeLogLockTableName>db_changelog_lock</databaseChangeLogLockTableName>
 						<referenceUrl>${mvn.model.datasource.url}</referenceUrl>
 						<referenceUsername>${mvn.model.datasource.username}</referenceUsername>
 						<referencePassword>${mvn.model.datasource.password}</referencePassword>
-						<diffChangeLogFile>database/liquibase.changelog.diff.xml</diffChangeLogFile>
+						<diffChangeLogFile>database/liquibase.changelog.xml</diffChangeLogFile>
 					</configuration>
 					<executions>
 						<execution>
