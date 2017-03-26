@@ -57,5 +57,19 @@
         </createIndex>
     </changeSet>
 
+	<!--  -->
+
+	<changeSet author="SergM" id="2017032603">
+		<insert tableName="managed_area">
+			<column name="name">picoCMDB - All components</column>
+			<column name="description">All custom and infrastructure components of picoCMDB application.</column>
+		</insert>
+		<insert tableName="managed_area">
+			<column name="name">picoCMDB - Infrastructure</column>
+			<column name="description">Only infrastructure components of picoCMDB application.</column>
+		</insert>
+		<comment>Add sample areas into 'managed_area'.</comment>
+	</changeSet>
+
 
 </databaseChangeLog>
