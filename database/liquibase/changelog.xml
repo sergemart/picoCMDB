@@ -1,0 +1,42 @@
+<databaseChangeLog
+		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+	<!-- from model; initial diff -->
+
+    <changeSet author="SergM (generated)" id="1490559994478-1">
+        <createTable tableName="role">
+            <column name="id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(200)"/>
+            <column name="is_system" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="SergM (generated)" id="1490559994478-2">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="role"/>
+    </changeSet>
+
+	<!--  -->
+
+	<changeSet author="SergM" id="2017032602">
+		<insert tableName="role">
+			<column name="id">ADMINISTRATOR</column>
+			<column name="description">Built-in administrative role.</column>
+			<column name="is_system" valueBoolean="true"/>
+		</insert>
+		<insert tableName="role">
+			<column name="id">READER</column>
+			<column name="description">Built-in read-only role.</column>
+			<column name="is_system" valueBoolean="true"/>
+		</insert>
+		<comment>Add basic roles into 'role'.</comment>
+	</changeSet>
+
+
+</databaseChangeLog>

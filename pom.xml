@@ -35,15 +35,19 @@
 		<mvn.datasource.url>stub</mvn.datasource.url>						<!-- set in a profile -->
 		<mvn.datasource.username>stub</mvn.datasource.username>				<!-- set in a profile -->
 		<mvn.datasource.password>stub</mvn.datasource.password>				<!-- set in a profile -->
-		<mvn.datasource.driverClass>stub</mvn.datasource.driverClass>		<!-- set in a profile; for liquibase.properties -->
+		<mvn.datasource.driverClass>stub</mvn.datasource.driverClass>		<!-- set in a profile; for Liquibase and maven-sql-plugin -->
 		<mvn.hibernate.dialect>stub</mvn.hibernate.dialect>					<!-- set in a profile -->
-			<!-- for model-to-liquibase diff generation workflow -->
+			<!-- Liquibase related -->
+		<mvn.liquibase.changelog>database/liquibase/changelog.xml</mvn.liquibase.changelog>
+		<mvn.liquibase.changelog.table>liquibase_changelog</mvn.liquibase.changelog.table>
+		<mvn.liquibase.changelog.lock.table>liquibase_changelog_lock</mvn.liquibase.changelog.lock.table>
+			<!-- for model-to-liquibase diff generation workflow with Liquibase and maven-sql-plugin -->
 		<mvn.model.datasource.url>jdbc:mysql://localhost:3306/picocmdb-model?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.model.datasource.url>
 		<mvn.model.datasource.username>root</mvn.model.datasource.username>
 		<mvn.model.datasource.password>root</mvn.model.datasource.password>
 		<mvn.model.datasource.driverClass>com.mysql.jdbc.Driver</mvn.model.datasource.driverClass>
-		<mvn.model.schema.drop.script>database\model.schema.drop.sql</mvn.model.schema.drop.script>
-		<mvn.model.schema.create.script>database\model.schema.create.sql</mvn.model.schema.create.script>
+		<mvn.model.schema.drop.script>database/sql/model.schema.drop.sql</mvn.model.schema.drop.script>
+		<mvn.model.schema.create.script>database/sql/model.schema.create.sql</mvn.model.schema.create.script>
 	</properties>
 
 	<dependencies>
@@ -183,7 +187,7 @@
 					<artifactId>liquibase-maven-plugin</artifactId>
 					<version>3.5.3</version> <!-- shoud be greater than schema version declared in changelog XML file -->
 					<configuration>
-						<changeLogFile>database/liquibase.changelog.xml</changeLogFile>
+						<changeLogFile>${mvn.liquibase.changelog}</changeLogFile>
 						<driver>${mvn.datasource.driverClass}</driver> <!-- set in a profile -->
 						<url>${mvn.datasource.url}</url> <!-- set in a profile -->
 						<username>${mvn.datasource.username}</username> <!-- set in a profile -->
@@ -192,12 +196,12 @@
 						<dropFirst>false</dropFirst>
 						<outputFileEncoding>UTF-8</outputFileEncoding>
 						<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase> <!-- to avoid "no X11 display" error on Heroku -->
-						<databaseChangeLogTableName>db_changelog</databaseChangeLogTableName>
-						<databaseChangeLogLockTableName>db_changelog_lock</databaseChangeLogLockTableName>
+						<databaseChangeLogTableName>${mvn.liquibase.changelog.table}</databaseChangeLogTableName>
+						<databaseChangeLogLockTableName>${mvn.liquibase.changelog.lock.table}</databaseChangeLogLockTableName>
 						<referenceUrl>${mvn.model.datasource.url}</referenceUrl>
 						<referenceUsername>${mvn.model.datasource.username}</referenceUsername>
 						<referencePassword>${mvn.model.datasource.password}</referencePassword>
-						<diffChangeLogFile>database/liquibase.changelog.xml</diffChangeLogFile>
+						<diffChangeLogFile>${mvn.liquibase.changelog}</diffChangeLogFile>
 					</configuration>
 					<executions>
 						<execution>
