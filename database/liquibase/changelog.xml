@@ -38,5 +38,24 @@
 		<comment>Add basic roles into 'role'.</comment>
 	</changeSet>
 
+	<!-- from model  -->
+
+    <changeSet author="SergM (generated)" id="1490567218240-1">
+        <createTable tableName="managed_area">
+            <column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="java.sql.Types.NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="SergM (generated)" id="1490567218240-2">
+        <createIndex indexName="UQ_marea_name" tableName="managed_area">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
 
 </databaseChangeLog>

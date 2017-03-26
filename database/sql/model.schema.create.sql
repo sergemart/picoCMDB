@@ -6,7 +6,20 @@ USE `picocmdb-model`
 SET FOREIGN_KEY_CHECKS=0 
 ;
 
+DROP TABLE IF EXISTS `managed_area` CASCADE
+;
+
 DROP TABLE IF EXISTS `role` CASCADE
+;
+
+CREATE TABLE `managed_area`
+(
+	`id` BIGINT NOT NULL AUTO_INCREMENT,
+	`name` NVARCHAR(50) NOT NULL,
+	`description` NVARCHAR(200) 	 NULL,
+	CONSTRAINT `PK_marea` PRIMARY KEY (`id` ASC)
+)
+
 ;
 
 CREATE TABLE `role`
@@ -17,6 +30,10 @@ CREATE TABLE `role`
 	CONSTRAINT `PK_role` PRIMARY KEY (`id` ASC)
 )
 
+;
+
+ALTER TABLE `managed_area` 
+ ADD INDEX `UQ_marea_name` (`name` ASC)
 ;
 
 SET FOREIGN_KEY_CHECKS=1 
