@@ -8,11 +8,11 @@
 
     <changeSet author="SergM (generated)" id="1490559994478-1">
         <createTable tableName="role">
-            <column name="id" type="VARCHAR(50)">
+            <column name="id" type="java.sql.Types.NVARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="VARCHAR(200)"/>
-            <column name="is_system" type="BIT(1)">
+            <column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+            <column name="is_system" type="java.sql.Types.BOOLEAN">
                 <constraints nullable="false"/>
             </column>
         </createTable>
