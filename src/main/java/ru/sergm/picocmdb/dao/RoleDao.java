@@ -12,6 +12,4 @@ public interface RoleDao extends CrudRepository <Role, String> {
 
 	Role findById(String id);
 
-	void deleteById(String id);
-
 }
