@@ -24,7 +24,7 @@ public class RoleServiceImpl implements RoleService {
 
 	public Role getRole(String roleId) throws NoSuchObjectException {
 		Role result =  roleDao.findById(roleId);
-		if (result == null) throw new NoSuchObjectException("No Role identified by " + roleId + " found.");
+		if (result == null) throw new NoSuchObjectException("No Role identified by '" + roleId + "' found.");
 		return result;
 	}
 
