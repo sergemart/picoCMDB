@@ -18,7 +18,7 @@ import java.util.List;
 
 import ru.sergm.picocmdb.dao.RoleDao;
 import ru.sergm.picocmdb.domain.Role;
-import ru.sergm.picocmdb.exception.NoSuchRoleException;
+import ru.sergm.picocmdb.exception.NoSuchObjectException;
 
 
 
@@ -65,7 +65,7 @@ public class RoleServiceTests {
 
 
 	@Test
-	public void getRole_Returns_Role() throws NoSuchRoleException {
+	public void getRole_Returns_Role() throws NoSuchObjectException {
 		// ARRANGE: to stub methods in the mocks
 		given(role.getId()).willReturn("dummy");
 		given(roleDao.findById("dummy")).willReturn(role);
@@ -77,8 +77,8 @@ public class RoleServiceTests {
 	}
 
 
-	@Test(expected = NoSuchRoleException.class)
-	public void getRole_Reports_When_No_Such_Role() throws NoSuchRoleException {
+	@Test(expected = NoSuchObjectException.class)
+	public void getRole_Reports_When_No_Such_Role() throws NoSuchObjectException {
 		// ARRANGE: to stub methods in the mocks
 		given(roleDao.findById("dummy")).willReturn(null);
 		// ACT

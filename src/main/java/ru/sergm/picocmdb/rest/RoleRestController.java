@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import ru.sergm.picocmdb.domain.Role;
-import ru.sergm.picocmdb.exception.NoSuchRoleException;
+import ru.sergm.picocmdb.exception.NoSuchObjectException;
 import ru.sergm.picocmdb.service.RoleService;
 
 
@@ -28,7 +28,7 @@ public class RoleRestController {
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/{roleId}")
-    public Role getRole(@PathVariable("roleId") String roleId) throws NoSuchRoleException {
+    public Role getRole(@PathVariable("roleId") String roleId) throws NoSuchObjectException {
         return roleService.getRole(roleId.toUpperCase());
     }
 }

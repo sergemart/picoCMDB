@@ -7,7 +7,7 @@ import java.util.List;
 
 import ru.sergm.picocmdb.dao.RoleDao;
 import ru.sergm.picocmdb.domain.Role;
-import ru.sergm.picocmdb.exception.NoSuchRoleException;
+import ru.sergm.picocmdb.exception.NoSuchObjectException;
 
 
 @Service
@@ -22,9 +22,9 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 
-	public Role getRole(String roleId) throws NoSuchRoleException {
+	public Role getRole(String roleId) throws NoSuchObjectException {
 		Role result =  roleDao.findById(roleId);
-		if (result == null) throw new NoSuchRoleException();
+		if (result == null) throw new NoSuchObjectException("No Role identified by " + roleId + " found.");
 		return result;
 	}
 

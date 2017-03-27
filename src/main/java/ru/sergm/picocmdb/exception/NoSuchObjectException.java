@@ -1,24 +1,24 @@
 package ru.sergm.picocmdb.exception;
 
-public class NoSuchRoleException extends Exception {
+public class NoSuchObjectException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 	private String message = null;
 
 
 	// default constructor
-	public NoSuchRoleException () {
+	public NoSuchObjectException() {
 		super();
 	}
 
 
-	public NoSuchRoleException (String message) {
+	public NoSuchObjectException(String message) {
 		super(message);
 		this.message = message;
 	}
 
 
-	public NoSuchRoleException (Throwable cause) {
+	public NoSuchObjectException(Throwable cause) {
 		super(cause);
 	}
 
