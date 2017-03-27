@@ -1,0 +1,4 @@
+{
+  "BIGINT": "java.sql.Types.BIGINT",
+  "VARCHAR": "java.sql.Types.NVARCHAR"
+}

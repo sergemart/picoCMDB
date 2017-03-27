@@ -1,26 +1,22 @@
-<databaseChangeLog
-		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 	<!-- from model; initial diff -->
 
-    <changeSet author="SergM (generated)" id="1490559994478-1">
-        <createTable tableName="role">
-            <column name="id" type="java.sql.Types.NVARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="java.sql.Types.NVARCHAR(200)"/>
-            <column name="is_system" type="java.sql.Types.BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
+	<changeSet author="SergM (generated)" id="1490559994478-1">
+		<createTable tableName="role">
+			<column name="id" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+			<column name="is_system" type="java.sql.Types.BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
 
-    <changeSet author="SergM (generated)" id="1490559994478-2">
-        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="role"/>
-    </changeSet>
+	<changeSet author="SergM (generated)" id="1490559994478-2">
+		<addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="role"/>
+	</changeSet>
 
 	<!--  -->
 
@@ -40,22 +36,23 @@
 
 	<!-- from model  -->
 
-    <changeSet author="SergM (generated)" id="1490567218240-1">
-        <createTable tableName="managed_area">
-            <column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="name" type="java.sql.Types.NVARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="java.sql.Types.NVARCHAR(200)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="SergM (generated)" id="1490567218240-2">
-        <createIndex indexName="UQ_marea_name" tableName="managed_area">
-            <column name="name"/>
-        </createIndex>
-    </changeSet>
+	<changeSet author="SergM (generated)" id="1490567218240-1">
+		<createTable tableName="managed_area">
+			<column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="name" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+		</createTable>
+	</changeSet>
+
+	<changeSet author="SergM (generated)" id="1490567218240-2">
+		<createIndex indexName="UQ_marea_name" tableName="managed_area">
+			<column name="name"/>
+		</createIndex>
+	</changeSet>
 
 	<!--  -->
 
