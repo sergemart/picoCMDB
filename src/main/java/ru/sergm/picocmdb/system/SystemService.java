@@ -20,7 +20,7 @@ public class SystemService {
 
 
 	public RestError getRestError(Exception e) {
-		if (e == null) return new RestError(new Exception(), "");
+		if (e == null) return new RestError(null, "");
 		String errorCode = this.getErrorCode(e.getClass().getCanonicalName());
 		return new RestError(e, errorCode);
 	}
