@@ -70,13 +70,12 @@
 		</dependency-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.thymeleaf</groupId>
-			<artifactId>thymeleaf-spring4</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -262,6 +261,10 @@
 			</properties>
 			<dependencies>
 				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-devtools</artifactId>
+				</dependency>
+				<dependency>
 					<groupId>mysql</groupId>
 					<artifactId>mysql-connector-java</artifactId>
 				</dependency>
@@ -274,7 +277,7 @@
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration>
 							<fork>true</fork>
-							<arguments>-debug</arguments>
+							<arguments>--debug</arguments>
 							<jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999 -Dfile.encoding=UTF-8</jvmArguments>
 						</configuration>
 						<executions>

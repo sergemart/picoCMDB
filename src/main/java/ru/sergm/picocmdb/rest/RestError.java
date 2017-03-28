@@ -1,8 +1,10 @@
 package ru.sergm.picocmdb.rest;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.Transient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.stereotype.Component;
+import ru.sergm.picocmdb.config.SystemService;
 
 
 public class RestError {
@@ -36,12 +38,13 @@ public class RestError {
 	}
 
 
-	RestError(Exception e) {
+	RestError(Exception e, String errorCode) {
 		this.e = e;
 		this.exceptionName = e.getClass().toString();
 		this.message = e.getMessage();
 		this.localizedMessage = e.getLocalizedMessage();
-		this.errorCode = "";
+		//this.errorCode = this.systemService.getErrorCode(this.exceptionName);
+		this.errorCode = errorCode;
 	}
 
 
