@@ -75,6 +75,7 @@ public class SystemServiceTests {
 		// ARRANGE: to stub methods in the mocks
 		String mockedExceptionClassCanonicalName = e.getClass().getCanonicalName();
 		given(env.getProperty(mockedExceptionClassCanonicalName)).willReturn("dummy_error_code");
+		given(e.getExceptionName()).willReturn(mockedExceptionClassCanonicalName);
 		given(e.getMessage()).willReturn("Dummy message.");
 		given(e.getLocalizedMessage()).willReturn("Произошла ошибка.");
 		//ACT

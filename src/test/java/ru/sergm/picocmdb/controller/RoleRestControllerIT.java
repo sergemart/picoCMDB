@@ -77,7 +77,7 @@ public class RoleRestControllerIT {
 	@Test
 	public void controller_Returns_Error_When_No_Such_Role() {
 		RestError receivedError = this.restTemplate.getForObject(baseResourceUrl + this.firstStoredRole.getId().toLowerCase() + "_bad_name", RestError.class);
-		RestError expectedError = systemService.getRestError(new NoSuchObjectException());
+		RestError expectedError = systemService.getRestError(new NoSuchObjectException("NOSUCHROLE", ""));
 		assertEquals(expectedError.getErrorCode(), receivedError.getErrorCode());
 		assertEquals(expectedError.getExceptionName(), receivedError.getExceptionName());
 	}
