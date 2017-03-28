@@ -1,4 +1,4 @@
-package ru.sergm.picocmdb.config;
+package ru.sergm.picocmdb.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -16,6 +16,13 @@ public class SystemService {
 	public String getErrorCode(String exceptionName) {
 		String result = env.getProperty(exceptionName);
 		if (result == null) return ""; else return result;
+	}
+
+
+	public RestError getRestError(Exception e) {
+		if (e == null) return new RestError(new Exception(), "");
+		String errorCode = this.getErrorCode(e.getClass().getCanonicalName());
+		return new RestError(e, errorCode);
 	}
 
 }

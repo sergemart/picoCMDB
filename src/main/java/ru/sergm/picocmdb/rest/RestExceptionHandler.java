@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import ru.sergm.picocmdb.config.SystemService;
+import ru.sergm.picocmdb.system.RestError;
+import ru.sergm.picocmdb.system.SystemService;
 import ru.sergm.picocmdb.exception.NoSuchObjectException;
 
 
@@ -22,8 +23,7 @@ public class RestExceptionHandler {
 	@ExceptionHandler(value = NoSuchObjectException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestError handleNoSuchObjectException(NoSuchObjectException e) {
-        String errorCode = systemService.getErrorCode(e.getClass().getCanonicalName());
-		return new RestError(e, errorCode);
+		return systemService.getRestError(e);
     }
 
 }

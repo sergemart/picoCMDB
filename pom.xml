@@ -250,8 +250,8 @@
 			</activation>
 			<properties>
 				<packaging.type>jar</packaging.type>
-				<mvn.skipUnitTests>true</mvn.skipUnitTests>
-				<mvn.skipIntegrationTests>true</mvn.skipIntegrationTests>
+				<mvn.skipUnitTests>false</mvn.skipUnitTests>
+				<mvn.skipIntegrationTests>false</mvn.skipIntegrationTests>
 				<!-- properties to rewrite placeholders in application.properties -->
 				<mvn.datasource.url>jdbc:mysql://localhost:3306/picocmdb?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false</mvn.datasource.url>
 				<mvn.datasource.username>root</mvn.datasource.username>

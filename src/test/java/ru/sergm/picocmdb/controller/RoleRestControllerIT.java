@@ -16,8 +16,11 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import ru.sergm.picocmdb.exception.NoSuchObjectException;
+import ru.sergm.picocmdb.system.SystemService;
 import ru.sergm.picocmdb.dao.RoleDao;
 import ru.sergm.picocmdb.domain.Role;
+import ru.sergm.picocmdb.system.RestError;
 
 
 @RunWith(SpringRunner.class)
@@ -30,6 +33,9 @@ public class RoleRestControllerIT {
 	private RoleDao roleDao;
 	private List<Role> storedList; // all Roles stored in database
 	private Role firstStoredRole; // the first Role object stored in database, if any
+	private String baseResourceUrl = "/rest/roles/";
+	@Autowired
+	private SystemService systemService;
 
 
 	@Before
@@ -50,7 +56,7 @@ public class RoleRestControllerIT {
 
 	@Test
 	public void controller_Returns_Role_List() {
-		ResponseEntity<List<Role>> response = restTemplate.exchange("/rest/roles", HttpMethod.GET, null, new ParameterizedTypeReference<List<Role>>() {});
+		ResponseEntity<List<Role>> response = restTemplate.exchange(baseResourceUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<Role>>() {});
 		List<Role> receivedList = response.getBody();
 		assertEquals(this.storedList.size(), receivedList.size());
 		assertEquals(this.firstStoredRole.getId(), receivedList.get(0).getId());
@@ -61,10 +67,19 @@ public class RoleRestControllerIT {
 
 	@Test
 	public void controller_Returns_Role() {
-		Role receivedRole = this.restTemplate.getForObject("/rest/roles/" + this.firstStoredRole.getId().toLowerCase(), Role.class);
+		Role receivedRole = this.restTemplate.getForObject(baseResourceUrl + this.firstStoredRole.getId().toLowerCase(), Role.class);
 		assertEquals(this.firstStoredRole.getId(), receivedRole.getId());
 		assertEquals(this.firstStoredRole.getDescription(), receivedRole.getDescription());
 		assertEquals(this.firstStoredRole.isSystem(), receivedRole.isSystem());
+	}
+
+
+	@Test
+	public void controller_Returns_Error_When_No_Such_Role() {
+		RestError receivedError = this.restTemplate.getForObject(baseResourceUrl + this.firstStoredRole.getId().toLowerCase() + "_bad_name", RestError.class);
+		RestError expectedError = systemService.getRestError(new NoSuchObjectException());
+		assertEquals(expectedError.getErrorCode(), receivedError.getErrorCode());
+		assertEquals(expectedError.getExceptionName(), receivedError.getExceptionName());
 	}
 
 
