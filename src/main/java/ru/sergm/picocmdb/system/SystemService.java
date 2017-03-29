@@ -1,11 +1,15 @@
 package ru.sergm.picocmdb.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.util.Locale;
+
 import ru.sergm.picocmdb.exception.BaseException;
+import ru.sergm.picocmdb.rest.RestError;
 
 
 @Service
@@ -15,7 +19,7 @@ public class SystemService {
 	@Autowired
 	private Environment env;
 	@Autowired
-	private ErrorMessages errorMessages;
+	private ResourceBundleMessageSource errorMessageSource;
 
 
 	public String getErrorCode(String exceptionName) {
@@ -24,17 +28,18 @@ public class SystemService {
 	}
 
 
-	public String getLocalizedErrorMessage(String exceptionName, String errorName) {
+	public String getLocalizedErrorMessage(String exceptionName, String errorName, Locale locale) {
 		String result = "Undefined error occured."; // default localized error message
 
 		// empty parameters yield default message
 		if (exceptionName == "" || exceptionName == null) return result;
 		if (errorName == "" || errorName == null) return result;
+		if (locale == null) return result;
 
 		String messageId = exceptionName + "." + errorName;
 		try {
-			result = errorMessages.getErrorMessage(messageId);
-		} catch (NoSuchMessageException e) {
+			result = errorMessageSource.getMessage(messageId, null, locale);
+		} catch (Exception e) {
 			// 'no such message' yield default message
 			return result;
 		}
@@ -42,10 +47,10 @@ public class SystemService {
 	}
 
 
-	public RestError getRestError(BaseException e) {
-		if (e == null) return new RestError(null, "", this.getLocalizedErrorMessage(null, null));
+	public RestError getRestError(BaseException e, Locale locale) {
+		if (e == null) return new RestError(null, "", this.getLocalizedErrorMessage(null, null, null));
 		String errorCode = this.getErrorCode(e.getExceptionName());
-		String localizedErrorMessage = this.getLocalizedErrorMessage(e.getExceptionName(), e.getErrorName());
+		String localizedErrorMessage = this.getLocalizedErrorMessage(e.getExceptionName(), e.getErrorName(), locale);
 		return new RestError(e, errorCode, localizedErrorMessage);
 	}
 

@@ -1,4 +1,4 @@
-package ru.sergm.picocmdb.system;
+package ru.sergm.picocmdb.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
