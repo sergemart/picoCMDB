@@ -1,6 +1,7 @@
 package ru.sergm.picocmdb.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
@@ -39,8 +40,8 @@ public class SystemService {
 		String messageId = exceptionName + "." + errorName;
 		try {
 			result = errorMessageSource.getMessage(messageId, null, locale);
-		} catch (Exception e) {
-			// 'no such message' yield default message
+		} catch (NoSuchMessageException e) {
+			// 'no such message' yields default message
 			return result;
 		}
 		return result;

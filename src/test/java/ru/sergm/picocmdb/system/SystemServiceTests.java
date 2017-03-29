@@ -3,6 +3,9 @@ package ru.sergm.picocmdb.system;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.support.AbstractMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -14,8 +17,11 @@ import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.web.servlet.i18n.AbstractLocaleResolver;
 import ru.sergm.picocmdb.exception.NoSuchObjectException;
 import ru.sergm.picocmdb.rest.RestError;
+
+import java.util.Locale;
 
 
 @RunWith(SpringRunner.class)
@@ -30,6 +36,8 @@ public class SystemServiceTests {
 	private NoSuchObjectException e;
 	@MockBean							// to create and inject mock
 	private Environment env;
+	@MockBean							// to create and inject mock
+	private ResourceBundleMessageSource errorMessageSource;
 	private String defaultLocalizedErrorMessage = "Undefined error occured.";
 
 
@@ -45,78 +53,76 @@ public class SystemServiceTests {
 		assertNotNull(e);
 		assertNotNull(restError);
 		assertNotNull(env);
+		assertNotNull(errorMessageSource);
 	}
 
 
 	@Test
 	public void getErrorCode_Returns_Error_Code() {
-		// ARRANGE: to stub methods in the mocks
-		given(env.getProperty("known.DummyException")).willReturn("dummy_error_code");
-		//ACT
-		systemService.getErrorCode("known.DummyException");
-		// ASSERT: to verify that correct Environment method is called req num of times and with req arguments
+		// GIVEN: to stub methods in the mocks
+		given(this.env.getProperty(anyString())).willReturn("dummy_error_code");
+		// WHEN
+		this.systemService.getErrorCode("known.DummyException");
+		// THEN: to verify that correct Environment method is called req num of times and with req arguments
 		verify(env, times(1)).getProperty("known.DummyException");
-		assertEquals("dummy_error_code", systemService.getErrorCode("known.DummyException"));
+		assertEquals("dummy_error_code", this.systemService.getErrorCode("known.DummyException"));
 	}
 
 
 	@Test
 	public void getErrorCode_Returns_Empty_String_On_Unknown_Exception() {
-		// ARRANGE: to stub methods in the mocks
-		given(env.getProperty("unknown.DummyException")).willReturn(null);
-		//ACT
+		// GIVEN: to stub methods in the mocks
+		given(this.env.getProperty(anyString())).willReturn(null);
+		// WHEN
 		systemService.getErrorCode("unknown.DummyException");
-		// ASSERT: to verify that correct Environment method is called req num of times and with req arguments
+		// THEN: to verify that correct Environment method is called req num of times and with req arguments
 		verify(env, times(1)).getProperty("unknown.DummyException");
-		assertEquals("", systemService.getErrorCode("unknown.DummyException"));
+		assertEquals("", this.systemService.getErrorCode("unknown.DummyException"));
 	}
 
-	/*
+
 	@Test
 	public void getLocalizedErrorMessage_Returns_Default_Error_Message_On_Empty_Parameters() {
-		//ACT
-		String localizedErrorMessage = systemService.getLocalizedErrorMessage("", "");
-		// ASSERT: to verify that correct Environment method is called req num of times and with req arguments
+		// WHEN
+		String localizedErrorMessage = this.systemService.getLocalizedErrorMessage("", "", Locale.ENGLISH);
+		// THEN
 		assertEquals(this.defaultLocalizedErrorMessage, localizedErrorMessage);
 	}
 
 
 	@Test
 	public void getLocalizedErrorMessage_Returns_Default_Error_Message_On_Null_Parameters() {
-		//ACT
-		String localizedErrorMessage = systemService.getLocalizedErrorMessage(null, null);
-		// ASSERT: to verify that correct Environment method is called req num of times and with req arguments
+		// WHEN
+		String localizedErrorMessage = this.systemService.getLocalizedErrorMessage(null, null, null);
+		// THEN
 		assertEquals(this.defaultLocalizedErrorMessage, localizedErrorMessage);
 	}
 
 
-	@Test
 	public void getLocalizedErrorMessage_Returns_Default_Error_Message_On_Unknown_Error() {
-		// ARRANGE: to stub methods in the mocks
-		given(errorMessages.getErrorMessage("unknown.DummyException.UNKNOWNERROR")).willThrow(NoSuchMessageException.class);
-		//ACT
-		String localizedErrorMessage = systemService.getLocalizedErrorMessage("unknown.DummyException", "UNKNOWNERROR");
-		// ASSERT: to verify that correct Environment method is called req num of times and with req arguments
-		verify(errorMessages, times(1)).getErrorMessage("unknown.DummyException.UNKNOWNERROR");
+		// GIVEN: to stub methods in the mocks
+		given(this.errorMessageSource.getMessage(anyString(), any(), any())).willThrow(NoSuchMessageException.class);
+		// WHEN
+		String localizedErrorMessage = this.systemService.getLocalizedErrorMessage("unknown.DummyException", "UNKNOWNERROR", Locale.ENGLISH);
+		// THEN
+		verify(this.errorMessageSource, times(2)).getMessage("unknown.DummyException.UNKNOWNERROR", null, Locale.ENGLISH);
 		assertEquals(this.defaultLocalizedErrorMessage, localizedErrorMessage);
 	}
-    */
 
-	/*
+
 	@Test
 	public void getRestError_Returns_RestError() {
-		// ARRANGE: to stub methods in the mocks
-		String mockedExceptionClassCanonicalName = e.getClass().getCanonicalName();
-		given(env.getProperty(mockedExceptionClassCanonicalName)).willReturn("dummy_error_code");
-		given(e.getExceptionName()).willReturn(mockedExceptionClassCanonicalName);
+		// GIVEN: to stub methods in the mocks
+		given(env.getProperty(anyString())).willReturn("dummy_error_code");
+		given(e.getExceptionName()).willReturn("known.DummyException");
 		given(e.getMessage()).willReturn("Dummy message.");
-		//ACT
-		systemService.getRestError(e);
-		// ASSERT: to verify that correct Environment method is called req num of times and with req arguments
-		assertEquals("dummy_error_code", systemService.getRestError(e).getErrorCode());
-		assertEquals(mockedExceptionClassCanonicalName, systemService.getRestError(e).getExceptionName());
-		assertEquals("Dummy message.", systemService.getRestError(e).getMessage());
+		// WHEN
+		systemService.getRestError(e, Locale.ENGLISH);
+		// THEN
+		assertEquals("dummy_error_code", systemService.getRestError(e, Locale.ENGLISH).getErrorCode());
+		assertEquals("known.DummyException", systemService.getRestError(e, Locale.ENGLISH).getExceptionName());
+		assertEquals("Dummy message.", systemService.getRestError(e, Locale.ENGLISH).getMessage());
 	}
-    */
+
 
 }

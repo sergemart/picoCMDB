@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.Locale;
 
 import ru.sergm.picocmdb.exception.NoSuchObjectException;
 import ru.sergm.picocmdb.system.SystemService;
@@ -56,8 +57,11 @@ public class RoleRestControllerIT {
 
 	@Test
 	public void controller_Returns_Role_List() {
+		// GIVEN: at least firstStoredRole exists in storage
+		// WHEN
 		ResponseEntity<List<Role>> response = restTemplate.exchange(baseResourceUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<Role>>() {});
 		List<Role> receivedList = response.getBody();
+		// THEN
 		assertEquals(this.storedList.size(), receivedList.size());
 		assertEquals(this.firstStoredRole.getId(), receivedList.get(0).getId());
 		assertEquals(this.firstStoredRole.getDescription(), receivedList.get(0).getDescription());
@@ -67,21 +71,30 @@ public class RoleRestControllerIT {
 
 	@Test
 	public void controller_Returns_Role() {
+		// GIVEN: at least firstStoredRole exists in storage
+		// WHEN
 		Role receivedRole = this.restTemplate.getForObject(baseResourceUrl + this.firstStoredRole.getId().toLowerCase(), Role.class);
+		// THEN
 		assertEquals(this.firstStoredRole.getId(), receivedRole.getId());
 		assertEquals(this.firstStoredRole.getDescription(), receivedRole.getDescription());
 		assertEquals(this.firstStoredRole.isSystem(), receivedRole.isSystem());
 	}
 
 
-	/*
 	@Test
 	public void controller_Returns_Error_When_No_Such_Role() {
+		// GIVEN
+		RestError expectedError = systemService.getRestError(new NoSuchObjectException("ROLENOTFOUND", ""), Locale.ENGLISH);
+		// WHEN
 		RestError receivedError = this.restTemplate.getForObject(baseResourceUrl + this.firstStoredRole.getId().toLowerCase() + "_bad_name", RestError.class);
-		RestError expectedError = systemService.getRestError(new NoSuchObjectException("NOSUCHROLE", ""));
-		assertEquals(expectedError.getErrorCode(), receivedError.getErrorCode());
+		// THEN
+		assertEquals(expectedError.getException().getClass().getCanonicalName(), receivedError.getExceptionName());
 		assertEquals(expectedError.getExceptionName(), receivedError.getExceptionName());
+		assertEquals(expectedError.getErrorName(), receivedError.getErrorName());
+		assertEquals(expectedError.getErrorCode(), receivedError.getErrorCode());
+		assertNotNull(receivedError.getMessage());
+		assertNotNull(receivedError.getLocalizedMessage());
+		assertNotNull(receivedError.getTimestamp());
 	}
-    */
 
 }
