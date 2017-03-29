@@ -24,21 +24,29 @@ public class SystemService {
 	}
 
 
-	public String getErrorMessage(String errorName) {
-		String result;
+	public String getLocalizedErrorMessage(String exceptionName, String errorName) {
+		String result = "Undefined error occured."; // default localized error message
+
+		// empty parameters yield default message
+		if (exceptionName == "" || exceptionName == null) return result;
+		if (errorName == "" || errorName == null) return result;
+
+		String messageId = exceptionName + "." + errorName;
 		try {
-			result = errorMessages.getErrorMessage(errorName);
+			result = errorMessages.getErrorMessage(messageId);
 		} catch (NoSuchMessageException e) {
-			return "Undefined error occured.";
+			// 'no such message' yield default message
+			return result;
 		}
 		return result;
 	}
 
 
 	public RestError getRestError(BaseException e) {
-		if (e == null) return new RestError(null, "");
-		String errorCode = this.getErrorCode(e.getClass().getCanonicalName());
-		return new RestError(e, errorCode);
+		if (e == null) return new RestError(null, "", this.getLocalizedErrorMessage(null, null));
+		String errorCode = this.getErrorCode(e.getExceptionName());
+		String localizedErrorMessage = this.getLocalizedErrorMessage(e.getExceptionName(), e.getErrorName());
+		return new RestError(e, errorCode, localizedErrorMessage);
 	}
 
 }

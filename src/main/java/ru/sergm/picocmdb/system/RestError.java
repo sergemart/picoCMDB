@@ -49,12 +49,12 @@ public class RestError {
 	public RestError() {} // default constructor required for deserialization
 
 
-	public RestError(BaseException e, String errorCode) {
+	public RestError(BaseException e, String errorCode, String localizedErrorMessage) {
 		this.e = e;
 		this.exceptionName = e.getExceptionName();
 		this.errorName = e.getErrorName();
 		this.message = e.getMessage();
-		this.localizedMessage = e.getLocalizedMessage();
+		this.localizedMessage = localizedErrorMessage;
 		this.errorCode = errorCode;
 		this.timestamp = String.valueOf(System.currentTimeMillis());
 	}

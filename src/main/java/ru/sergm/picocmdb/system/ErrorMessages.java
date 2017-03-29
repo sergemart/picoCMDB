@@ -23,8 +23,8 @@ public class ErrorMessages {
 	}
 
 
-	public String getErrorMessage(String errorName) {
-		return accessor.getMessage(errorName);
+	public String getErrorMessage(String messageId) {
+		return accessor.getMessage(messageId);
 	}
 
 }
