@@ -184,5 +184,110 @@
         <comment>Add sample areas into 'managed_area'.</comment>
     </changeSet>
 
+	<!-- manual -->
+
+	<changeSet author="SergM" id="2017032604">
+		<insert tableName="configuration_item_type">
+			<column name="id">SITE</column>
+			<column name="description">Площадка.</column>
+		</insert>
+		<insert tableName="configuration_item_type">
+			<column name="id">COMPUTER</column>
+			<column name="description">Аппаратный или виртуальный сервер; рабочая станция.</column>
+		</insert>
+		<insert tableName="configuration_item_type">
+			<column name="id">CLOUD</column>
+			<column name="description">PaaS, IaaS or SaaS provider.</column>
+		</insert>
+		<insert tableName="configuration_item_type">
+			<column name="id">CONTAINER</column>
+			<column name="description">Контейнер.</column>
+		</insert>
+		<insert tableName="configuration_item_type">
+			<column name="id">DBMS</column>
+			<column name="description">СУБД.</column>
+		</insert>
+		<insert tableName="configuration_item_type">
+			<column name="id">DATABASE</column>
+			<column name="description">База данных.</column>
+		</insert>
+		<insert tableName="configuration_item_type">
+			<column name="id">APPLICATION</column>
+			<column name="description">Приложение.</column>
+		</insert>
+		<insert tableName="configuration_item_type">
+			<column name="id">LICENSE</column>
+			<column name="description">Лицензия.</column>
+		</insert>
+		<comment>Add basic types into 'configuration_item_type'.</comment>
+	</changeSet>
+	<changeSet author="SergM" id="2017032605">
+		<insert tableName="ci_ci_link_type">
+			<column name="id">DEPLOYMENT</column>
+			<column name="description">Indicates that CI deploys onto another CI.</column>
+		</insert>
+		<insert tableName="ci_ci_link_type">
+			<column name="id">COMPOSITION</column>
+			<column name="description">Indicates that CI is a part of another CI.</column>
+		</insert>
+		<insert tableName="ci_ci_link_type">
+			<column name="id">DEPENDENCY</column>
+			<column name="description">Indicates that CI consumes something from another CI, in a broad sense.</column>
+		</insert>
+		<comment>Add basic types into 'ci_ci_link_type'.</comment>
+	</changeSet>
+	<changeSet author="SergM" id="2017032606">
+		<insert tableName="configuration_item">
+			<column name="name">Heroku</column>
+			<column name="ci_type_id">CLOUD</column>
+			<column name="description">PicoCMDB project demo server.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">Smallbox</column>
+			<column name="ci_type_id">COMPUTER</column>
+			<column name="description">PicoCMDB project lab test server.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">PicoCMDB - demo</column>
+			<column name="ci_type_id">APPLICATION</column>
+			<column name="description">Published PicoCMDB demo instance.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">PicoCMDB - test</column>
+			<column name="ci_type_id">APPLICATION</column>
+			<column name="description">PicoCMDB test instance.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">picocmdb - demo</column>
+			<column name="ci_type_id">DATABASE</column>
+			<column name="description">PicoCMDB demo database.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">picocmdb - test</column>
+			<column name="ci_type_id">DATABASE</column>
+			<column name="description">PicoCMDB test database.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">Demo Postgres</column>
+			<column name="ci_type_id">DBMS</column>
+			<column name="description">Heroku Postgres service.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">Test MySQL</column>
+			<column name="ci_type_id">DBMS</column>
+			<column name="description">Lab MySQL server.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">tomcat</column>
+			<column name="ci_type_id">CONTAINER</column>
+			<column name="description">Lab Docker container running Apache Tomcat.</column>
+		</insert>
+		<insert tableName="configuration_item">
+			<column name="name">mysql</column>
+			<column name="ci_type_id">CONTAINER</column>
+			<column name="description">Lab Docker container running MySQL.</column>
+		</insert>
+		<comment>Add sample CIs into 'configuration_item'.</comment>
+	</changeSet>
 
 </databaseChangeLog>
