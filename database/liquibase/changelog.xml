@@ -1,24 +1,161 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-	<!-- from model; initial diff -->
+	<!-- from model -->
+	<!-- initial diff -->
+	<!-- Primary keys are manually renamed back to their uniquie names to conform Postgres reqs -->
 
-	<changeSet author="SergM (generated)" id="1490559994478-1">
+	<changeSet author="SergM (generated)" id="1490865490510-1">
+		<createTable tableName="ci_ci_link">
+			<column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="parent_id" type="java.sql.Types.BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="child_id" type="java.sql.Types.BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="link_type_id" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-2">
+		<createTable tableName="ci_ci_link_type">
+			<column name="id" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-3">
+		<createTable tableName="ci_marea_link">
+			<column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="ci_id" type="java.sql.Types.BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="marea_id" type="java.sql.Types.BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-4">
+		<createTable tableName="configuration_item">
+			<column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="name" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ci_type_id" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-5">
+		<createTable tableName="configuration_item_type">
+			<column name="id" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-6">
+		<createTable tableName="managed_area">
+			<column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="name" type="java.sql.Types.NVARCHAR(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-7">
 		<createTable tableName="role">
 			<column name="id" type="java.sql.Types.NVARCHAR(50)">
 				<constraints nullable="false"/>
 			</column>
 			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
-			<column name="is_system" type="java.sql.Types.BOOLEAN">
+			<column name="is_system" type="BIT(1)">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
-
-	<changeSet author="SergM (generated)" id="1490559994478-2">
-		<addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="role"/>
+	<changeSet author="SergM (generated)" id="1490865490510-8">
+		<addPrimaryKey columnNames="id" constraintName="PK_cclt" tableName="ci_ci_link_type"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-9">
+		<addPrimaryKey columnNames="id" constraintName="PK_cit" tableName="configuration_item_type"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-10">
+		<addPrimaryKey columnNames="id" constraintName="PK_role" tableName="role"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-11">
+		<addUniqueConstraint columnNames="parent_id, child_id, link_type_id" constraintName="UQ_ccl" tableName="ci_ci_link"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-12">
+		<addUniqueConstraint columnNames="name, ci_type_id" constraintName="UQ_ci_name_ci_type" tableName="configuration_item"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-13">
+		<addUniqueConstraint columnNames="ci_id, marea_id" constraintName="UQ_cml" tableName="ci_marea_link"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-14">
+		<addUniqueConstraint columnNames="name" constraintName="UQ_marea_name" tableName="managed_area"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-15">
+		<createIndex indexName="IXFK_ccl_cclt" tableName="ci_ci_link">
+			<column name="link_type_id"/>
+		</createIndex>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-16">
+		<createIndex indexName="IXFK_ccl_ci_child" tableName="ci_ci_link">
+			<column name="child_id"/>
+		</createIndex>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-17">
+		<createIndex indexName="IXFK_ccl_ci_parent" tableName="ci_ci_link">
+			<column name="parent_id"/>
+		</createIndex>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-18">
+		<createIndex indexName="IXFK_ci_ci_type" tableName="configuration_item">
+			<column name="ci_type_id"/>
+		</createIndex>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-19">
+		<createIndex indexName="IXFK_cml_ci" tableName="ci_marea_link">
+			<column name="ci_id"/>
+		</createIndex>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-20">
+		<createIndex indexName="IXFK_cml_marea" tableName="ci_marea_link">
+			<column name="marea_id"/>
+		</createIndex>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-21">
+		<addForeignKeyConstraint baseColumnNames="link_type_id" baseTableName="ci_ci_link" constraintName="FK_ccl_cclt" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ci_ci_link_type"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-22">
+		<addForeignKeyConstraint baseColumnNames="child_id" baseTableName="ci_ci_link" constraintName="FK_ccl_ci_child" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="configuration_item"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-23">
+		<addForeignKeyConstraint baseColumnNames="parent_id" baseTableName="ci_ci_link" constraintName="FK_ccl_ci_parent" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="configuration_item"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-24">
+		<addForeignKeyConstraint baseColumnNames="ci_type_id" baseTableName="configuration_item" constraintName="FK_ci_ci_type" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="configuration_item_type"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-25">
+		<addForeignKeyConstraint baseColumnNames="ci_id" baseTableName="ci_marea_link" constraintName="FK_cml_ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="configuration_item"/>
+	</changeSet>
+	<changeSet author="SergM (generated)" id="1490865490510-26">
+		<addForeignKeyConstraint baseColumnNames="marea_id" baseTableName="ci_marea_link" constraintName="FK_cml_marea" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="managed_area"/>
 	</changeSet>
 
-	<!--  -->
+	<!-- manual  -->
 
 	<changeSet author="SergM" id="2017032602">
 		<insert tableName="role">
@@ -34,27 +171,7 @@
 		<comment>Add basic roles into 'role'.</comment>
 	</changeSet>
 
-	<!-- from model  -->
-
-	<changeSet author="SergM (generated)" id="1490567218240-1">
-		<createTable tableName="managed_area">
-			<column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
-				<constraints primaryKey="true"/>
-			</column>
-			<column name="name" type="java.sql.Types.NVARCHAR(50)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="description" type="java.sql.Types.NVARCHAR(200)"/>
-		</createTable>
-	</changeSet>
-
-	<changeSet author="SergM (generated)" id="1490567218240-2">
-		<createIndex indexName="UQ_marea_name" tableName="managed_area">
-			<column name="name"/>
-		</createIndex>
-	</changeSet>
-
-	<!--  -->
+	<!-- manual -->
 
 	<changeSet author="SergM" id="2017032603">
 		<insert tableName="managed_area">
@@ -68,121 +185,5 @@
 		<comment>Add sample areas into 'managed_area'.</comment>
 	</changeSet>
 
-	<!-- from model  -->
 
-	<changeSet author="SergM (generated)" id="1490827523459-1">
-        <createTable tableName="ci_marea_link">
-            <column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="ci_id" type="java.sql.Types.BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="marea_id" type="java.sql.Types.BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="link_type" type="java.sql.Types.NVARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-2">
-        <createTable tableName="ci_marea_link_type">
-            <column name="id" type="java.sql.Types.NVARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="java.sql.Types.NVARCHAR(200)"/>
-        </createTable>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-3">
-        <createTable tableName="configuration_item">
-            <column autoIncrement="true" name="id" type="java.sql.Types.BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="name" type="java.sql.Types.NVARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ci_type_id" type="java.sql.Types.NVARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="java.sql.Types.NVARCHAR(200)"/>
-        </createTable>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-4">
-        <createTable tableName="configuration_item_type">
-            <column name="id" type="java.sql.Types.NVARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="java.sql.Types.NVARCHAR(200)"/>
-        </createTable>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-5">
-        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="ci_marea_link_type"/>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-6">
-        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="configuration_item_type"/>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-7">
-        <createIndex indexName="IXFK_ci_ci_type" tableName="configuration_item">
-            <column name="ci_type_id"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-8">
-        <createIndex indexName="IXFK_cml_ci" tableName="ci_marea_link">
-            <column name="ci_id"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-9">
-        <createIndex indexName="IXFK_cml_link_type" tableName="ci_marea_link">
-            <column name="link_type"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-10">
-        <createIndex indexName="IXFK_cml_marea" tableName="ci_marea_link">
-            <column name="marea_id"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-11">
-        <createIndex indexName="UQ_ci_name_ci_type" tableName="configuration_item">
-            <column name="name"/>
-            <column name="ci_type_id"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-12">
-        <createIndex indexName="UQ_cml" tableName="ci_marea_link">
-            <column name="ci_id"/>
-            <column name="marea_id"/>
-            <column name="link_type"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-13">
-        <addForeignKeyConstraint baseColumnNames="ci_type_id" baseTableName="configuration_item" constraintName="FK_ci_ci_type" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="configuration_item_type"/>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-14">
-        <addForeignKeyConstraint baseColumnNames="ci_id" baseTableName="ci_marea_link" constraintName="FK_cml_ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="configuration_item"/>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-15">
-        <addForeignKeyConstraint baseColumnNames="link_type" baseTableName="ci_marea_link" constraintName="FK_cml_link_type" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ci_marea_link_type"/>
-    </changeSet>
-
-    <changeSet author="SergM (generated)" id="1490827523459-16">
-        <addForeignKeyConstraint baseColumnNames="marea_id" baseTableName="ci_marea_link" constraintName="FK_cml_marea" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="managed_area"/>
-    </changeSet>
-
-
-	
 </databaseChangeLog>
