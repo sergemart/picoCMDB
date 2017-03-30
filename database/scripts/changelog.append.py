@@ -4,11 +4,15 @@ import os, sys
 #from xml.etree import ElementTree as ET
 from lxml import etree as ET # compared to xml.etree, allows to keep XML comments
 
+basename = os.path.basename(sys.argv[0])
 nargs = len(sys.argv)
 if not nargs == 3:
-    print("usage: %s changelog_to_be_appended changelog_to_append" %os.path.basename(sys.argv[0]))
+    print("usage: %s changelog_to_be_appended changelog_to_append" %basename)
     exit(1)
-else: print("Current directory: " + os.getcwd() + "\nChangelog to be appended: " + sys.argv[1] + "\nChangelog to append: " + sys.argv[2])
+else:
+    print("%s: Current directory: %s" % (basename, os.getcwd()))
+    print("%s: Changelog to be appended: %s" % (basename, sys.argv[1]))
+    print("%s: Changelog to append: %s" % (basename, sys.argv[2]))
 
 sFileToBeAppended = sys.argv[1]
 sFileToAppend = sys.argv[2]
@@ -31,4 +35,5 @@ for xmlElementToBeAppended in xmlElementListToBeAppended:
 
 xmlTreeToAppend.write(sFileToAppend)
 
+print("%s: Done." %basename)
 exit()

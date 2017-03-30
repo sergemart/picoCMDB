@@ -10,12 +10,11 @@ SET CHANGELOGTMP=.\%CHANGELOGPATH%\changelog.tmp.xml
 
 SET MAVENCHANGELOGPROPERTY=mvn.liquibase.changelog
 SET MAVENPROFILE=dev-JAR
-SET MAVENARGS=-D%MAVENCHANGELOGPROPERTY%=%CHANGELOGTMP% -P%MAVENPROFILE%
 
 SET SCRIPTPATH=database\scripts
-SET FILTERSCRIPT=.\%SCRIPTPATH%\sql.types.filter.py
-SET FILTERJSON=.\%SCRIPTPATH%\filter.json
-SET FILTERARGS=%CHANGELOGTMP% %FILTERJSON%
+SET TYPESFILTERSCRIPT=.\%SCRIPTPATH%\sql.types.filter.py
+SET TYPESFILTERJSON=.\%SCRIPTPATH%\filter.json
+SET PKFIXSCRIPT=.\%SCRIPTPATH%\primary.keys.filter.py
 SET APPENDSCRIPT=.\%SCRIPTPATH%\changelog.append.py
 
 rem -- Go to project root
@@ -24,14 +23,17 @@ cd ..\..
 rem -- Make temporary file for model-originated changes
 copy %CHANGELOGTEMPLATE% %CHANGELOGTMP%
 
-rem -- Insert model-originated changes into temporary changelog
-call mvn sql:execute liquibase:diff %MAVENARGS%
+rem -- Generate and insert model-originated changes into temporary changelog
+call mvn sql:execute liquibase:diff -D%MAVENCHANGELOGPROPERTY%=%CHANGELOGTMP% -P%MAVENPROFILE%
 
 rem -- Filter changelog: replace DBMS-bound SQL types with generic (DBMS-unbound) ones
-python %FILTERSCRIPT% %FILTERARGS%
+python %TYPESFILTERSCRIPT% %CHANGELOGTMP% %TYPESFILTERJSON%
+
+rem -- Filter changelog: replace fixed PK names ("PRIMARY") with unique ones (PK_[table_name]); needed when diff is generated from MySQL databases
+python %PKFIXSCRIPT% %CHANGELOGTMP%
 
 rem -- Append filtered temporary changelog
 python %APPENDSCRIPT% %CHANGELOGTMP% %CHANGELOG%
 
-rem -- Clean up
+rem -- Delete temporary file
 del %CHANGELOGTMP%

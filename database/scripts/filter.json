@@ -1,4 +1,5 @@
 {
   "BIGINT": "java.sql.Types.BIGINT",
-  "VARCHAR": "java.sql.Types.NVARCHAR"
+  "VARCHAR": "java.sql.Types.NVARCHAR",
+  "BIT(1)": "java.sql.Types.BOOLEAN"
 }

@@ -2,11 +2,16 @@
 # Replaces DBMS-bound SQL types with generic (DBMS-unbound) ones
 import os, sys
 
+
+basename = os.path.basename(sys.argv[0])
 nargs = len(sys.argv)
 if not nargs == 3:
-    print("usage: %s file_to_process json_with_filter" %os.path.basename(sys.argv[0]))
+    print("usage: %s file_to_process json_with_filter" %basename)
     exit(1)
-else: print("Current directory: " + os.getcwd() + "\nFile to process: " + sys.argv[1] + "\nJSON with filter: " + sys.argv[2])
+else:
+    print("%s: Current directory: %s" % (basename, os.getcwd()))
+    print("%s: File to process: %s" % (basename, sys.argv[1]))
+    print("%s: JSON with filter: %s" % (basename, sys.argv[2]))
 
 sFileToProcess = sys.argv[1]
 sFilter = sys.argv[2]
@@ -26,4 +31,5 @@ for key, value in dictFilter.items():
 with open(sFileToProcess, "w") as fileToProcess:
     fileToProcess.write(sData)
 
+print("%s: Done." %basename)
 exit()
