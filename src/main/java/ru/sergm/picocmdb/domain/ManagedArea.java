@@ -1,11 +1,14 @@
 package ru.sergm.picocmdb.domain;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@DynamicUpdate // to put only modified columns into SQL 'UPDATE' statement
 public class ManagedArea {
 
 	@Id

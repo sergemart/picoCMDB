@@ -31,4 +31,5 @@ public class RoleRestController {
     public Role getRole(@PathVariable("roleId") String roleId) throws NoSuchObjectException {
         return roleService.getRole(roleId.toUpperCase());
     }
+
 }
