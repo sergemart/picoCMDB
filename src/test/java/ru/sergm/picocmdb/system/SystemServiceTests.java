@@ -2,31 +2,27 @@ package ru.sergm.picocmdb.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.NoSuchMessageException;
-import org.springframework.context.support.AbstractMessageSource;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.*;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import org.springframework.web.servlet.i18n.AbstractLocaleResolver;
-import ru.sergm.picocmdb.exception.NoSuchObjectException;
-import ru.sergm.picocmdb.rest.RestError;
+import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.*;
 
 import java.util.Locale;
+
+import ru.sergm.picocmdb.AbstractTest;
+import ru.sergm.picocmdb.exception.NoSuchObjectException;
+import ru.sergm.picocmdb.rest.RestError;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SystemServiceTests {
+public class SystemServiceTests extends AbstractTest {
 
 	@Autowired
 	private SystemService systemService;	// the CuT
@@ -34,11 +30,7 @@ public class SystemServiceTests {
 	private RestError restError;
 	@Mock
 	private NoSuchObjectException e;
-	@MockBean							// to create and inject mock
-	private Environment env;
-	@MockBean							// to create and inject mock
-	private ResourceBundleMessageSource errorMessageSource;
-	private String defaultLocalizedErrorMessage = "Undefined error occured.";
+	private final String defaultLocalizedErrorMessage = "Undefined error occurred.";
 
 
 	@Before
@@ -49,11 +41,12 @@ public class SystemServiceTests {
 
 	@Test
 	public void cuT_And_Mocks_Should_Be_Created() {
-		assertNotNull(systemService);
-		assertNotNull(e);
-		assertNotNull(restError);
-		assertNotNull(env);
-		assertNotNull(errorMessageSource);
+		assertNotNull(this.systemService);
+		assertNotNull(this.e);
+		assertNotNull(this.restError);
+		// all MockBeans are defined in super to avoid multiple Spring context loading
+		assertNotNull(super.env);
+		assertNotNull(super.errorMessageSource);
 	}
 
 

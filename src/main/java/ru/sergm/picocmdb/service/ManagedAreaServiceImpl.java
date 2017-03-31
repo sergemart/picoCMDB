@@ -21,13 +21,9 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 	@Autowired
 	private ManagedAreaDao managedAreaDao;
 
-
-	public List<ManagedArea> getAllManagedAreas() {
-		return managedAreaDao.findAll();
-	}
-
-
-	@Transactional
+	/**
+	 * [C]reates new ManagedArea object.
+	 */
 	public ManagedArea createManagedArea(ManagedArea managedArea)
 			throws ObjectAlreadyExistsException, WrongDataException {
 		if (managedArea == null) throw new WrongDataException("MANAGEDAREABAD", "Managed Area is not provided.");
@@ -35,8 +31,7 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 		String newObjectName = managedArea.getName();
 		if (newObjectName == null) throw new WrongDataException("MANAGEDAREABAD", "Managed Area name is not provided.");
 		if (managedAreaDao.findByName(newObjectName) != null) throw new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", "Managed Area named '" + newObjectName + "' already exists.");
-		// to save data
-		try {
+		try { // to persist
 			return managedAreaDao.save(managedArea);
 		} catch (DataIntegrityViolationException e) {
 			throw new WrongDataException("MANAGEDAREABAD", "Managed Area missing required fields.");
@@ -44,7 +39,31 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 	}
 
 
-	@Transactional
+	/**
+	 * [R]eads all stored ManagedArea objects.
+	 */
+	public List<ManagedArea> getAllManagedAreas() {
+		return managedAreaDao.findAll();
+	}
+
+
+	/**
+	 * [R]eads stored ManagedArea object.
+	 */
+	public ManagedArea getManagedArea(Long managedAreaId)
+			throws NoSuchObjectException {
+		ManagedArea result =  managedAreaDao.findById(managedAreaId);
+		if (result == null) throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");
+		return result;
+	}
+
+
+	/**
+	 * [U]pdates stored ManagedArea object.
+	 * @param currentManagedAreaId Stored ManagedArea object ID.
+	 * @param newManagedAreaData Data to be updated.
+	 */
+	@Transactional(rollbackFor = WrongDataException.class)
 	public ManagedArea updateManagedArea(Long currentManagedAreaId, ManagedArea newManagedAreaData)
 			throws ObjectAlreadyExistsException, WrongDataException, NoSuchObjectException {
 		if (currentManagedAreaId == null) throw new WrongDataException("MANAGEDAREABAD", "Current Managed Area ID is not provided.");
@@ -60,28 +79,21 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 					throw new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", "Managed Area named '" + newManagedAreaName + "' already exists.");
 			}
 		}
-		// to save data
-		try {
-			currentManagedArea.setName(newManagedAreaData.getName());
-			currentManagedArea.setDescription(newManagedAreaData.getDescription());
-			return managedAreaDao.save(currentManagedArea);
+		try { // to persist
+			newManagedAreaData.setId(currentManagedAreaId); // enrich new data with ID, making them an object to get JPA call 'merge' instead of 'persist'
+			return managedAreaDao.save(newManagedAreaData);
 		} catch (DataIntegrityViolationException e) {
 			throw new WrongDataException("MANAGEDAREABAD", "Managed Area missing required fields.");
 		}
 	}
 
 
-	public ManagedArea getManagedArea(Long managedAreaId)
-			throws NoSuchObjectException {
-		ManagedArea result =  managedAreaDao.findById(managedAreaId);
-		if (result == null) throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");
-		return result;
-	}
-
-
+	/**
+	 * [D]eletes stored ManagedArea object.
+	 */
 	public void deleteManagedArea(Long managedAreaId)
 			throws NoSuchObjectException {
-		try {
+		try { // to persist
 			managedAreaDao.delete(managedAreaId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");

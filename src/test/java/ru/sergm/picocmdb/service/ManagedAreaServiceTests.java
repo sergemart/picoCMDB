@@ -4,30 +4,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 import ru.sergm.picocmdb.AbstractTest;
-import ru.sergm.picocmdb.domain.Role;
-import ru.sergm.picocmdb.exception.NoSuchObjectException;
+import ru.sergm.picocmdb.domain.ManagedArea;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 //@ContextConfiguration(classes = {PicocmdbApplication.class})
-public class RoleServiceTests extends AbstractTest {
+public class ManagedAreaServiceTests extends AbstractTest {
 
 	@Autowired
-	private RoleService roleService;	// the CuT
+	private ManagedAreaService managedAreaService;	// the CuT
 	@Mock
-	private Role role, role2;
+	private ManagedArea managedArea, managedArea2;
 
 
 	@Before
@@ -38,51 +39,50 @@ public class RoleServiceTests extends AbstractTest {
 
 	@Test
 	public void cuT_And_Mocks_Should_Be_Created() {
-		assertNotNull(this.roleService);
-		assertNotNull(this.role);
-		assertNotNull(this.role2);
+		assertNotNull(this.managedAreaService);
+		assertNotNull(this.managedArea);
 		// all MockBeans are defined in super to avoid multiple Spring context loading
-		assertNotNull(super.roleDao);
+		assertNotNull(super.managedAreaDao);
 	}
 
 
 	@Test
-	public void getAllRoles_Returns_Role_List() {
+	public void getAllManagedAreas_Returns_ManagedArea_List() {
 		// GIVEN: to stub methods in the mocks
-		given(role.getId()).willReturn("dummy");
-		given(role2.getId()).willReturn("dummy2");
-		List<Role> result = Arrays.asList(role, role2);
-		given(roleDao.findAll()).willReturn(result);
+		given(managedArea.getId()).willReturn(1L);
+		given(managedArea2.getId()).willReturn(2L);
+		List<ManagedArea> result = Arrays.asList(managedArea, managedArea2);
+		given(managedAreaDao.findAll()).willReturn(result);
 		// WHEN
-		roleService.getAllRoles();
+		managedAreaService.getAllManagedAreas();
 		// THEN: to verify that correct DAO method is called req num of times and with req arguments
-		verify(roleDao, times(1)).findAll();
-		assertEquals("dummy", roleService.getAllRoles().get(0).getId());
-		assertEquals("dummy2", roleService.getAllRoles().get(1).getId());
+		verify(managedAreaDao, times(1)).findAll();
+		assertEquals(1L, (long)managedAreaService.getAllManagedAreas().get(0).getId());
+		assertEquals(2L, (long)managedAreaService.getAllManagedAreas().get(1).getId());
 	}
 
-
+    /*
 	@Test
 	public void getRole_Returns_Role() throws NoSuchObjectException {
 		// GIVEN: to stub methods in the mocks
-		given(role.getId()).willReturn("dummy");
-		given(roleDao.findById(anyString())).willReturn(role);
+		given(managedArea.getId()).willReturn("dummy");
+		given(managedAreaDao.findById(anyString())).willReturn(managedArea);
 		// WHEN
-		roleService.getRole("dummy");
+		managedAreaService.getRole("dummy");
 		// THEN: to verify that correct DAO method is called req num of times and with req arguments
-		verify(roleDao, times(1)).findById("dummy");
-		assertEquals("dummy", roleService.getRole("dummy").getId());
+		verify(managedAreaDao, times(1)).findById("dummy");
+		assertEquals("dummy", managedAreaService.getRole("dummy").getId());
 	}
 
 
 	@Test(expected = NoSuchObjectException.class)
 	public void getRole_Reports_When_No_Such_Role() throws NoSuchObjectException {
 		// GIVEN: to stub methods in the mocks
-		given(roleDao.findById(anyString())).willReturn(null);
+		given(managedAreaDao.findById(anyString())).willReturn(null);
 		// WHEN
-		roleService.getRole("dummy");
+		managedAreaService.getRole("dummy");
 		// THEN: to verify that correct DAO method is called req num of times and with req arguments
-		verify(roleDao, times(1)).findById("dummy");
+		verify(managedAreaDao, times(1)).findById("dummy");
 	}
-
+    */
 }
