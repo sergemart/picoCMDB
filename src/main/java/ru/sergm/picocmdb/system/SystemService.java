@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import ru.sergm.picocmdb.exception.BaseException;
 import ru.sergm.picocmdb.rest.RestError;
@@ -30,11 +31,11 @@ public class SystemService {
 
 
 	public String getLocalizedErrorMessage(String exceptionName, String errorName, Locale locale) {
-		String result = "Undefined error occured."; // default localized error message
+		String result = "Undefined error occurred."; // default localized error message
 
 		// empty parameters yield default message
-		if (exceptionName == "" || exceptionName == null) return result;
-		if (errorName == "" || errorName == null) return result;
+		if (Objects.equals(exceptionName, "") || exceptionName == null) return result;
+		if (Objects.equals(errorName, "") || errorName == null) return result;
 		if (locale == null) return result;
 
 		String messageId = exceptionName + "." + errorName;

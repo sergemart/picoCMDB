@@ -52,7 +52,7 @@ public class SystemServiceTests extends AbstractTest {
 
 	@Test
 	public void getErrorCode_Returns_Error_Code() {
-		// GIVEN: to stub methods in the mocks
+		// GIVEN
 		given(this.env.getProperty(anyString())).willReturn("dummy_error_code");
 		// WHEN
 		this.systemService.getErrorCode("known.DummyException");
@@ -64,7 +64,7 @@ public class SystemServiceTests extends AbstractTest {
 
 	@Test
 	public void getErrorCode_Returns_Empty_String_On_Unknown_Exception() {
-		// GIVEN: to stub methods in the mocks
+		// GIVEN
 		given(this.env.getProperty(anyString())).willReturn(null);
 		// WHEN
 		systemService.getErrorCode("unknown.DummyException");
@@ -93,7 +93,7 @@ public class SystemServiceTests extends AbstractTest {
 
 
 	public void getLocalizedErrorMessage_Returns_Default_Error_Message_On_Unknown_Error() {
-		// GIVEN: to stub methods in the mocks
+		// GIVEN
 		given(this.errorMessageSource.getMessage(anyString(), any(), any())).willThrow(NoSuchMessageException.class);
 		// WHEN
 		String localizedErrorMessage = this.systemService.getLocalizedErrorMessage("unknown.DummyException", "UNKNOWNERROR", Locale.ENGLISH);
@@ -105,7 +105,7 @@ public class SystemServiceTests extends AbstractTest {
 
 	@Test
 	public void getRestError_Returns_RestError() {
-		// GIVEN: to stub methods in the mocks
+		// GIVEN
 		given(env.getProperty(anyString())).willReturn("dummy_error_code");
 		given(e.getExceptionName()).willReturn("known.DummyException");
 		given(e.getMessage()).willReturn("Dummy message.");

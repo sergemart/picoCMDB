@@ -45,17 +45,18 @@ public class RoleServiceTests extends AbstractTest {
 		assertNotNull(super.roleDao);
 	}
 
+	// -------------- READ --------------
 
 	@Test
 	public void getAllRoles_Returns_Role_List() {
-		// GIVEN: to stub methods in the mocks
+		// GIVEN
 		given(role.getId()).willReturn("dummy");
 		given(role2.getId()).willReturn("dummy2");
 		List<Role> result = Arrays.asList(role, role2);
 		given(roleDao.findAll()).willReturn(result);
 		// WHEN
 		roleService.getAllRoles();
-		// THEN: to verify that correct DAO method is called req num of times and with req arguments
+		// THEN
 		verify(roleDao, times(1)).findAll();
 		assertEquals("dummy", roleService.getAllRoles().get(0).getId());
 		assertEquals("dummy2", roleService.getAllRoles().get(1).getId());
@@ -63,25 +64,27 @@ public class RoleServiceTests extends AbstractTest {
 
 
 	@Test
-	public void getRole_Returns_Role() throws NoSuchObjectException {
-		// GIVEN: to stub methods in the mocks
+	public void getRole_Returns_Role()
+			throws NoSuchObjectException {
+		// GIVEN
 		given(role.getId()).willReturn("dummy");
 		given(roleDao.findById(anyString())).willReturn(role);
 		// WHEN
 		roleService.getRole("dummy");
-		// THEN: to verify that correct DAO method is called req num of times and with req arguments
+		// THEN
 		verify(roleDao, times(1)).findById("dummy");
 		assertEquals("dummy", roleService.getRole("dummy").getId());
 	}
 
 
 	@Test(expected = NoSuchObjectException.class)
-	public void getRole_Reports_When_No_Such_Role() throws NoSuchObjectException {
-		// GIVEN: to stub methods in the mocks
+	public void getRole_Reports_When_No_Such_Role()
+			throws NoSuchObjectException {
+		// GIVEN
 		given(roleDao.findById(anyString())).willReturn(null);
 		// WHEN
 		roleService.getRole("dummy");
-		// THEN: to verify that correct DAO method is called req num of times and with req arguments
+		// THEN
 		verify(roleDao, times(1)).findById("dummy");
 	}
 

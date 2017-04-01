@@ -5,8 +5,8 @@ public class BaseException extends Exception {
 
 	// Properties
 
-	protected String errorName;
-	protected String message;
+	private final String errorName;
+	private final String message;
 
 
 	public String getErrorName() {
