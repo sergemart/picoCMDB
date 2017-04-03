@@ -1,11 +1,8 @@
 package ru.sergm.picocmdb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -15,14 +12,13 @@ import static org.mockito.BDDMockito.*;
 import java.util.Arrays;
 import java.util.List;
 
-import ru.sergm.picocmdb.AbstractTest;
+import ru.sergm.picocmdb.AbstractUnitTestSuite;
 import ru.sergm.picocmdb.domain.Role;
 import ru.sergm.picocmdb.exception.NoSuchObjectException;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-//@ContextConfiguration(classes = {PicocmdbApplication.class})
-public class RoleServiceTests extends AbstractTest {
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+public class RoleServiceTests extends AbstractUnitTestSuite {
 
 	@Autowired
 	private RoleService roleService;	// the CuT

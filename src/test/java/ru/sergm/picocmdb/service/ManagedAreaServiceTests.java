@@ -1,14 +1,11 @@
 package ru.sergm.picocmdb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.junit.Assert.assertEquals;
@@ -18,17 +15,16 @@ import static org.mockito.BDDMockito.*;
 import java.util.Arrays;
 import java.util.List;
 
-import ru.sergm.picocmdb.AbstractTest;
+import ru.sergm.picocmdb.AbstractUnitTestSuite;
 import ru.sergm.picocmdb.domain.ManagedArea;
 import ru.sergm.picocmdb.exception.NoSuchObjectException;
 import ru.sergm.picocmdb.exception.ObjectAlreadyExistsException;
 import ru.sergm.picocmdb.exception.WrongDataException;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-//@ContextConfiguration(classes = {PicocmdbApplication.class})
-public class ManagedAreaServiceTests extends AbstractTest {
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+public class ManagedAreaServiceTests extends AbstractUnitTestSuite {
 
 	@Autowired
 	private ManagedAreaService managedAreaService;	// the CuT

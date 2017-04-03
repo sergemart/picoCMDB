@@ -2,21 +2,18 @@ package ru.sergm.picocmdb.controller;
 
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.Locale;
 
+import ru.sergm.picocmdb.AbstractIntegrationTestSuite;
 import ru.sergm.picocmdb.exception.NoSuchObjectException;
 import ru.sergm.picocmdb.system.SystemService;
 import ru.sergm.picocmdb.dao.RoleDao;
@@ -24,9 +21,7 @@ import ru.sergm.picocmdb.domain.Role;
 import ru.sergm.picocmdb.rest.RestError;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)		// start embedded tomcat on random free port
-public class RoleRestControllerIT {
+public class RoleRestControllerIT extends AbstractIntegrationTestSuite {
 
 	@Autowired
 	private TestRestTemplate restTemplate;

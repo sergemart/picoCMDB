@@ -19,7 +19,7 @@ import ru.sergm.picocmdb.dao.RoleDao;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public abstract class AbstractTest {
+public abstract class AbstractUnitTestSuite {
 
 	@MockBean							// to create and inject mock
 	protected Environment env;

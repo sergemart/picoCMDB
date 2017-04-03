@@ -2,14 +2,17 @@ package ru.sergm.picocmdb.domain;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
+//@Table(name="managed_area")
 @DynamicUpdate // to put only modified columns into SQL 'UPDATE' statement
-public class ManagedArea {
+public class ManagedArea
+		//implements Serializable
+{
+
+	//private static final long serialVersionUID = 2L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // to conform with Heroku Postgres

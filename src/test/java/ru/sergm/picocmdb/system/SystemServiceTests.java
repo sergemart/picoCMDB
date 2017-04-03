@@ -1,12 +1,9 @@
 package ru.sergm.picocmdb.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.NoSuchMessageException;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -15,14 +12,14 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.Locale;
 
-import ru.sergm.picocmdb.AbstractTest;
+import ru.sergm.picocmdb.AbstractUnitTestSuite;
 import ru.sergm.picocmdb.exception.NoSuchObjectException;
 import ru.sergm.picocmdb.rest.RestError;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class SystemServiceTests extends AbstractTest {
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+public class SystemServiceTests extends AbstractUnitTestSuite {
 
 	@Autowired
 	private SystemService systemService;	// the CuT
