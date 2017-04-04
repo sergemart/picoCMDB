@@ -35,7 +35,7 @@ public class RoleDaoIT extends AbstractIntegrationTestSuite {
 	@Test
 	public void roleDao_findAll_Finds_Correct_Number_Of_Entities() {
 		// GIVEN
-		String sqlQuery = "SELECT COUNT(*) FROM ROLE";
+		String sqlQuery = "SELECT COUNT(*) FROM role";
 		Long sqlCount = jdbcTemplate.queryForObject(sqlQuery, Long.class);
 		// WHEN
 		List<Role> daoResult = roleDao.findAll();
@@ -47,7 +47,7 @@ public class RoleDaoIT extends AbstractIntegrationTestSuite {
 	@Test
 	public void roleDao_findAll_Finds_All_Stored_Entities() {
 		// GIVEN
-		String sqlQuery = "SELECT * FROM ROLE";
+		String sqlQuery = "SELECT * FROM role";
 		//List<Role> sqlResult = jdbcTemplate.query(sqlQuery, new Object[] {}, new BeanPropertyRowMapper<Role>(Role.class));
 		List<Role> sqlResult = jdbcTemplate.query(sqlQuery, new Object[] {}, (rs, rowNum) -> {
 				// custom lambda row mapper; Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
