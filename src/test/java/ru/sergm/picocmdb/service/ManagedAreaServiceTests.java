@@ -39,7 +39,7 @@ public class ManagedAreaServiceTests extends AbstractUnitTestSuite {
 
 
 	@Test
-	public void cuT_And_Mocks_Should_Be_Created() {
+	public void cuT_And_Mocks_Are_Injected() {
 		assertNotNull(this.managedAreaService);
 		assertNotNull(this.managedArea);
 		// all MockBeans are defined in super to avoid multiple Spring context loading

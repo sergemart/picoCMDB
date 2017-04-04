@@ -37,7 +37,7 @@ public class SystemServiceTests extends AbstractUnitTestSuite {
 
 
 	@Test
-	public void cuT_And_Mocks_Should_Be_Created() {
+	public void cuT_And_Mocks_Are_Injected() {
 		assertNotNull(this.systemService);
 		assertNotNull(this.e);
 		assertNotNull(this.restError);

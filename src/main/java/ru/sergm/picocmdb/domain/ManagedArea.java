@@ -3,16 +3,10 @@ package ru.sergm.picocmdb.domain;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-//@Table(name="managed_area")
 @DynamicUpdate // to put only modified columns into SQL 'UPDATE' statement
-public class ManagedArea
-		//implements Serializable
-{
-
-	//private static final long serialVersionUID = 2L;
+public class ManagedArea {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // to conform with Heroku Postgres
@@ -44,6 +38,30 @@ public class ManagedArea
     public void setDescription(String description) {
         this.description = description;
     }
+
+
+	// Overrides
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ManagedArea that = (ManagedArea) o;
+
+		if (!id.equals(that.id)) return false;
+		if (!name.equals(that.name)) return false;
+		return description != null ? description.equals(that.description) : that.description == null;
+	}
+
+
+	@Override
+	public int hashCode() {
+		int result = id.hashCode();
+		result = 31 * result + name.hashCode();
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		return result;
+	}
 
 }
 

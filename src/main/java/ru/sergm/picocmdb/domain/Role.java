@@ -1,15 +1,9 @@
 package ru.sergm.picocmdb.domain;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-//@Table(name="role")
-public class Role
-		//implements Serializable
-{
-
-	//private static final long serialVersionUID = 1L;
+public class Role {
 
 	@Id
 	private String id;
@@ -40,6 +34,31 @@ public class Role
 	public void setSystem(boolean system) {
 		isSystem = system;
 	}
+
+
+	// Overrides
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Role role = (Role) o;
+
+		if (isSystem != role.isSystem) return false;
+		if (!id.equals(role.id)) return false;
+		return description != null ? description.equals(role.description) : role.description == null;
+	}
+
+
+	@Override
+	public int hashCode() {
+		int result = id.hashCode();
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (isSystem ? 1 : 0);
+		return result;
+	}
+
 
 }
 

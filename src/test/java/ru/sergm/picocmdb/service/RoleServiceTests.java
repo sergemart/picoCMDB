@@ -33,7 +33,7 @@ public class RoleServiceTests extends AbstractUnitTestSuite {
 
 
 	@Test
-	public void cuT_And_Mocks_Should_Be_Created() {
+	public void cuT_And_Mocks_Are_Injected() {
 		assertNotNull(this.roleService);
 		assertNotNull(this.role);
 		assertNotNull(this.role2);
