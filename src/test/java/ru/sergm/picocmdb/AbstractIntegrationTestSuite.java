@@ -15,4 +15,5 @@ public abstract class AbstractIntegrationTestSuite {
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 
+
 }
