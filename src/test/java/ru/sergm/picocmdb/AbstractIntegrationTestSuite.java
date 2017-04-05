@@ -7,6 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import org.junit.runner.RunWith;
 
+import javax.persistence.EntityManager;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -18,6 +19,9 @@ public abstract class AbstractIntegrationTestSuite {
 
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
+
+	//@Autowired
+	//protected EntityManager em;
 
 
 	// to make unique entities' IDs to prevent constraint violation when test executed in parallel
