@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import org.junit.runner.RunWith;
 
-import javax.persistence.EntityManager;
+import java.lang.management.ManagementFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -24,9 +24,9 @@ public abstract class AbstractIntegrationTests {
 	//protected EntityManager em;
 
 
-	// to make unique entities' IDs to prevent constraint violation when test executed in parallel
+	// to make somewhat unique entities' IDs to prevent constraint violation when test executed in parallel
 	protected String getSalt() {
-		return String.valueOf(counter.incrementAndGet());
+		return String.valueOf(counter.incrementAndGet() + "@" + ManagementFactory.getRuntimeMXBean().getName());
 	}
 
 }

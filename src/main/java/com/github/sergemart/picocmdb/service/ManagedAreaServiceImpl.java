@@ -73,11 +73,13 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 		// to check if the new name, when provided, doesn't conflict with names of existing objects
 		String currentManagedAreaName = currentManagedArea.getName();
 		String newManagedAreaName = newManagedAreaData.getName();
-		if (newManagedAreaName != null) {
+		if (newManagedAreaName != null) { // check the name
 			if ( !newManagedAreaName.equals(currentManagedAreaName) ) { // when old and new names are the same, that's OK
 				if (managedAreaDao.findByName(newManagedAreaName) != null)
 					throw new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", "Managed Area named '" + newManagedAreaName + "' already exists.");
 			}
+		} else {
+			throw new WrongDataException("MANAGEDAREABAD", "Managed Area missing required fields."); // null name is unaccepted
 		}
 		try { // to persist
 			newManagedAreaData.setId(currentManagedAreaId); // enrich new data with ID, making them an object to get JPA call 'merge' instead of 'persist'
