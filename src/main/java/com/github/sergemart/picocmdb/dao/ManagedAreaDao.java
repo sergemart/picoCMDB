@@ -14,6 +14,6 @@ public interface ManagedAreaDao extends CrudRepository <ManagedArea, Long> {
 
 	ManagedArea findByName(String name);
 
-	ManagedArea deleteByName(String name);
+	void deleteByName(String name);
 
 }
