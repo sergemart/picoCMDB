@@ -130,7 +130,7 @@ public class ManagedAreaDaoIT extends AbstractIntegrationTests {
 		// WHEN
 		this.entityDao.deleteByName(entityName1);
 		// THEN
-		assertThat(this.entityDao.findByName(entityName1), is(nullValue())); // cannot use JDBC; deleteByName() implementation requires transaction
+		assertThat(this.entityDao.findByName(entityName1), is(nullValue())); // cannot use JDBC; delete([not_key_type]) auto-implementation requires explicit transaction
 	}
 
 

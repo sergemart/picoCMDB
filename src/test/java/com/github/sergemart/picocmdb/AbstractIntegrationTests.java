@@ -2,6 +2,7 @@ package com.github.sergemart.picocmdb;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -13,6 +14,7 @@ import java.lang.management.ManagementFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.sergemart.picocmdb.junitrule.JdbcCleaner;
+import com.github.sergemart.picocmdb.system.SystemService;
 
 
 @RunWith(SpringRunner.class)
@@ -24,6 +26,10 @@ public abstract class AbstractIntegrationTests {
 	protected String baseRestUrl;
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
+	@Autowired
+	protected TestRestTemplate restTemplate;
+	@Autowired
+	protected SystemService systemService;
 	@Rule
 	public final JdbcCleaner jdbcCleaner = new JdbcCleaner();
 
