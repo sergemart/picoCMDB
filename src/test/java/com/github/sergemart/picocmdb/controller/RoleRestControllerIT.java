@@ -1,6 +1,5 @@
 package com.github.sergemart.picocmdb.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -55,13 +54,13 @@ public class RoleRestControllerIT extends AbstractIntegrationTests {
 		// GIVEN
 			// create entity; add task to delete this entity after the test
 		String entityId1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO role(id, description, is_system) VALUES (?, 'тестовое описание', true)", (Object[]) new String[] {entityId1});
+		super.jdbcTemplate.update("INSERT INTO role(id, description, is_system) VALUES (?, 'Тестовое описание.', true)", (Object[]) new String[] {entityId1});
 		super.jdbcCleaner.addTask("DELETE FROM role WHERE (id = ?)", new String[] {entityId1});
 		// WHEN
 		Role receivedEntity = super.restTemplate.getForObject(baseResourceUrl + entityId1.toLowerCase(), Role.class);
 		// THEN
 		assertThat(receivedEntity.getId(), is(entityId1));
-		assertThat(receivedEntity.getDescription(), is("тестовое описание"));
+		assertThat(receivedEntity.getDescription(), is("Тестовое описание."));
 		assertThat(receivedEntity.isSystem(), is(true));
 	}
 
