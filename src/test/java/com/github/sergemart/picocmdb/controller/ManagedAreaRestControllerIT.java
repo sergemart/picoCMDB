@@ -1,15 +1,14 @@
 package com.github.sergemart.picocmdb.controller;
 
+import net.minidev.json.JSONObject;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +17,10 @@ import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ManagedArea;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
+import com.github.sergemart.picocmdb.exception.WrongDataException;
 import com.github.sergemart.picocmdb.rest.RestError;
+
+import javax.persistence.Entity;
 
 
 public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
@@ -129,6 +131,32 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
 		HttpEntity<ManagedArea> request = new HttpEntity<>(newEntity, headers);
+		// WHEN
+		RestError receivedError = super.restTemplate.postForObject(baseResourceUrl, request, RestError.class);
+		// THEN
+		assertThat( receivedError.getExceptionName(), is(expectedError.getExceptionName()) );
+		assertThat( receivedError.getErrorName(), is(expectedError.getErrorName()) );
+		assertThat( receivedError.getErrorCode(), is(expectedError.getErrorCode()) );
+		assertThat( receivedError.getMessage(), not(is(nullValue())) );
+		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
+		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
+	}
+
+
+	@Test
+	public void create_Op_Reports_When_JSON_Has_Wrong_Schema() {
+		// GIVEN
+			// construct expected error object
+		RestError expectedError = super.systemService.getRestError(new WrongDataException("MANAGEDAREABAD", ""), new Locale("ru",  "RU"));
+			// construct a bad entity
+		JSONObject newEntity = new JSONObject();
+		newEntity.put("badfield1", "badfieldvalue");
+		newEntity.put("badfield2", "Некое значение.");
+			// construct HTTP request
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
+		HttpEntity<JSONObject> request = new HttpEntity<>(newEntity, headers);
 		// WHEN
 		RestError receivedError = super.restTemplate.postForObject(baseResourceUrl, request, RestError.class);
 		// THEN
