@@ -102,10 +102,10 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 	@Test
 	public void save_Creates_Entity() {
 		// GIVEN
-		// add task to delete created entity after the test
+			// add task to delete created entity after the test
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcCleaner.addTask("DELETE FROM role WHERE (id = ?)", new String[] {entityId1});
-		// construct an entity
+			// construct an entity
 		Role entity = new Role();
 		entity.setId(entityId1);
 		entity.setDescription("dummy description");
@@ -113,7 +113,7 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		// WHEN
 		this.entityDao.save(entity);
 		// THEN
-		// get the entity instance via JDBC
+			// get the entity instance via JDBC
 		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1},
 				// custom lambda implementation for RowMapper.mapRow(); Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
 				(rs, rowNum) -> {
@@ -143,8 +143,6 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		List<Role> jdbcResult = jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1}, new BeanPropertyRowMapper(Role.class));
 		assertThat(jdbcResult.size(), is(0));
 	}
-
-
 
 
 }
