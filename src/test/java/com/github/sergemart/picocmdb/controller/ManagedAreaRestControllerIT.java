@@ -258,6 +258,7 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
 		HttpEntity<JSONObject> request = new HttpEntity<>(updatingEntity, headers);
+		// WHEN
 			// RestTemplate.put() is void for somewhat reason, hence the fallback to RestTemplate.exchange()
 		ResponseEntity<RestError> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.PUT, request, new ParameterizedTypeReference<RestError>() {});
 		RestError receivedError = response.getBody();
@@ -272,6 +273,50 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 		Map<String, Object> unmodifiedEntity = super.jdbcTemplate.queryForMap("SELECT name, description FROM managed_area WHERE (id = ?)", (Object[])new Long[] {entityId1});
 		assertThat(unmodifiedEntity.get("name"), is(entityName1));
 		assertThat(unmodifiedEntity.get("description"), is("Тестовое описание."));
+	}
+
+	// -------------- DELETE --------------
+
+	@Test
+	public void delete_Op_Deletes_Entity() {
+		// GIVEN
+			// create an entity to be deleted; add task to delete this entity after the test, just in case if delete fails for any reason
+		String entityName1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName1});
+		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
+			// get auto-generated entity ID
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+		// WHEN
+		ResponseEntity<Void> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.DELETE, null, new ParameterizedTypeReference<Void>() {});
+		// THEN
+		assertThat( response.getStatusCode(), is(HttpStatus.OK) );
+			// extra check directly in database that the entity is deleted
+		Integer entityCount = super.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Integer.class);
+		assertThat(entityCount, is(0));
+	}
+
+
+	@Test
+	public void delete_Op_Reports_When_No_Such_Entity() {
+		// GIVEN
+			// construct expected error object
+		RestError expectedError = super.systemService.getRestError(new NoSuchObjectException("MANAGEDAREANOTFOUND", ""), new Locale("ru",  "RU"));
+		// WHEN
+			// construct HTTP request
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
+		HttpEntity<Void> request = new HttpEntity<>(null, headers);
+		ResponseEntity<RestError> response = super.restTemplate.exchange(baseResourceUrl + "nosuchid", // no such entity
+				HttpMethod.DELETE, request, new ParameterizedTypeReference<RestError>() {});
+		RestError receivedError = response.getBody();
+		// THEN
+		assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+		assertThat( receivedError.getExceptionName(), is(expectedError.getExceptionName()) );
+		assertThat( receivedError.getErrorName(), is(expectedError.getErrorName()) );
+		assertThat( receivedError.getErrorCode(), is(expectedError.getErrorCode()) );
+		assertThat( receivedError.getMessage(), not(is(nullValue())) );
+		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
+		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
 	}
 
 
