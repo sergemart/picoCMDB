@@ -19,7 +19,7 @@ import com.github.sergemart.picocmdb.rest.RestError;
 
 public class RoleRestControllerIT extends AbstractIntegrationTests {
 
-	private String baseResourceUrl = "/rest/roles/";
+	private final String baseResourceUrl = "/rest/roles/";
 
 
 	@Test
@@ -43,9 +43,9 @@ public class RoleRestControllerIT extends AbstractIntegrationTests {
 		super.jdbcCleaner.addTask("DELETE FROM role WHERE (id = ?)", new String[] {entityId2});
 		// WHEN
 		ResponseEntity<List<Role>> response = super.restTemplate.exchange(baseResourceUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<Role>>() {});
-		List<Role> body = response.getBody();
+		List<Role> entityList = response.getBody();
 		// THEN
-	    assertThat(body, hasSize(greaterThan(1)));
+	    assertThat(entityList, hasSize(greaterThan(1)));
 	}
 
 
