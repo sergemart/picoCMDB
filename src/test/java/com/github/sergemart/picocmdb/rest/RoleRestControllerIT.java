@@ -1,4 +1,4 @@
-package com.github.sergemart.picocmdb.controller;
+package com.github.sergemart.picocmdb.rest;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -14,7 +14,6 @@ import java.util.Locale;
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.Role;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
-import com.github.sergemart.picocmdb.rest.RestError;
 
 
 public class RoleRestControllerIT extends AbstractIntegrationTests {

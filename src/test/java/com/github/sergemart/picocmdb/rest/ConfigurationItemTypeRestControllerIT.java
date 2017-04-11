@@ -1,4 +1,4 @@
-package com.github.sergemart.picocmdb.controller;
+package com.github.sergemart.picocmdb.rest;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -13,16 +13,15 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
-import com.github.sergemart.picocmdb.domain.ManagedArea;
+import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
-import com.github.sergemart.picocmdb.rest.RestError;
 
 
-public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
+public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTests {
 
-	private final String baseResourceUrl = "/rest/managedareas/";
+	private final String baseResourceUrl = "/rest/configurationitemtypes/";
 
 
 	@Test
@@ -33,39 +32,39 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 
 
 	// -------------- READ --------------
-
+	
 	@Test
 	public void read_Op_Reads_Entity_List() {
 		// GIVEN
 			// create entities, just in case if the database is empty; add tasks to delete these entities after the test
-		String entityName1 = "DUMMY" + super.getSalt();
-		String entityName2 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'dummy description')", (Object[]) new String[] {entityName1});
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'dummy description')", (Object[]) new String[] {entityName2});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName2});
+		String entityId1 = "DUMMY" + super.getSalt();
+		String entityId2 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'dummy description')", (Object[]) new String[] {entityId1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'dummy description')", (Object[]) new String[] {entityId2});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId2});
 		// WHEN
-		ResponseEntity<List<ManagedArea>> response = super.restTemplate.exchange(baseResourceUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<ManagedArea>>() {});
-		List<ManagedArea> entityList = response.getBody();
+		ResponseEntity<List<ConfigurationItemType>> response = super.restTemplate.exchange(baseResourceUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<ConfigurationItemType>>() {});
+		List<ConfigurationItemType> entityList = response.getBody();
 		// THEN
 	    assertThat(entityList, hasSize(greaterThan(1)));
 	}
 
-
+	/*
 	@Test
 	public void read_Op_Reads_Entity() {
 		// GIVEN
 			// create an entity; add task to delete this entity after the test
-		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName1});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 		// WHEN
-		ManagedArea receivedEntity = super.restTemplate.getForObject(baseResourceUrl + entityId1, ManagedArea.class);
+		ConfigurationItemType receivedEntity = super.restTemplate.getForObject(baseResourceUrl + entityId1, ConfigurationItemType.class);
 		// THEN
 		assertThat(receivedEntity.getId(), is(entityId1));
-		assertThat(receivedEntity.getName(), is(entityName1));
+		assertThat(receivedEntity.getName(), is(entityId1));
 		assertThat(receivedEntity.getDescription(), is("Тестовое описание."));
 	}
 
@@ -92,21 +91,21 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 	public void create_Op_Creates_Entity() {
 		// GIVEN
 			// add task to delete created entity after the test
-		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// construct a new entity and a HTTP request
-		ManagedArea newEntity = new ManagedArea();
-		newEntity.setName(entityName1);
+		ConfigurationItemType newEntity = new ConfigurationItemType();
+		newEntity.setName(entityId1);
 		newEntity.setDescription("Тестовое описание.");
-		HttpEntity<ManagedArea> request = new HttpEntity<>(newEntity);
+		HttpEntity<ConfigurationItemType> request = new HttpEntity<>(newEntity);
 		// WHEN
-		ManagedArea receivedEntity = super.restTemplate.postForObject(baseResourceUrl, request, ManagedArea.class);
+		ConfigurationItemType receivedEntity = super.restTemplate.postForObject(baseResourceUrl, request, ConfigurationItemType.class);
 		// THEN
 		assertThat( receivedEntity.getId(), not(is( nullValue() )) );
-		assertThat(receivedEntity.getName(), is(entityName1));
+		assertThat(receivedEntity.getName(), is(entityId1));
 		assertThat(receivedEntity.getDescription(), is("Тестовое описание."));
 		// extra check directly in database
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 		assertThat(entityId1, is( receivedEntity.getId()) );
 	}
 
@@ -115,19 +114,19 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 	public void create_Op_Reports_When_Entity_With_Same_Name_Exists() {
 		// GIVEN
 			// create an entity; add task to delete this entity after the test
-		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName1});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// construct expected error object
 		RestError expectedError = super.systemService.getRestError(new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", ""), new Locale("ru",  "RU"));
 			// construct a new entity
-		ManagedArea newEntity = new ManagedArea();
-		newEntity.setName(entityName1);
+		ConfigurationItemType newEntity = new ConfigurationItemType();
+		newEntity.setName(entityId1);
 		newEntity.setDescription("Ещё одно описание.");
 			// construct HTTP request
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
-		HttpEntity<ManagedArea> request = new HttpEntity<>(newEntity, headers);
+		HttpEntity<ConfigurationItemType> request = new HttpEntity<>(newEntity, headers);
 		// WHEN
 		RestError receivedError = super.restTemplate.postForObject(baseResourceUrl, request, RestError.class);
 		// THEN
@@ -171,28 +170,28 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 	public void update_Op_Updates_Entity() {
 		// GIVEN
 			// create an entity to be updated
-		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName1});
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
 			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 			// add task to delete the entity by ID (name will be changed) after the test
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (id = ?)", new Long[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new Long[] {entityId1});
 			// construct update data and a HTTP request
-		ManagedArea updatingEntity = new ManagedArea();
-		updatingEntity.setName(entityName1 + "_modified");
+		ConfigurationItemType updatingEntity = new ConfigurationItemType();
+		updatingEntity.setName(entityId1 + "_modified");
 		updatingEntity.setDescription("Изменённое тестовое описание.");
-		HttpEntity<ManagedArea> request = new HttpEntity<>(updatingEntity);
+		HttpEntity<ConfigurationItemType> request = new HttpEntity<>(updatingEntity);
 		// WHEN
 			// RestTemplate.put() is void for somewhat reason, hence the fallback to RestTemplate.exchange()
-		ResponseEntity<ManagedArea> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.PUT, request, new ParameterizedTypeReference<ManagedArea>() {});
-		ManagedArea receivedEntity = response.getBody();
+		ResponseEntity<ConfigurationItemType> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.PUT, request, new ParameterizedTypeReference<ConfigurationItemType>() {});
+		ConfigurationItemType receivedEntity = response.getBody();
 		// THEN
 		assertThat(receivedEntity.getId(), is(entityId1));
-		assertThat(receivedEntity.getName(), is(entityName1 + "_modified"));
+		assertThat(receivedEntity.getName(), is(entityId1 + "_modified"));
 		assertThat(receivedEntity.getDescription(), is("Изменённое тестовое описание."));
 			// extra check directly in database
-		Map<String, Object> modifiedEntity = super.jdbcTemplate.queryForMap("SELECT name, description FROM managed_area WHERE (id = ?)", (Object[])new Long[] {entityId1});
-		assertThat(modifiedEntity.get("name"), is(entityName1 + "_modified"));
+		Map<String, Object> modifiedEntity = super.jdbcTemplate.queryForMap("SELECT id, description FROM configuration_item_type WHERE (id = ?)", (Object[])new Long[] {entityId1});
+		assertThat(modifiedEntity.get("name"), is(entityId1 + "_modified"));
 		assertThat(modifiedEntity.get("description"), is("Изменённое тестовое описание."));
 	}
 
@@ -201,25 +200,25 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 	public void update_Op_Reports_When_Entity_With_Same_Name_Exists() {
 		// GIVEN
 			// create an entity to be updated; add task to delete this entity after the test
-		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName1});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 			// create an entity what will be a conflicting existing entity; add task to delete this entity after the test
-		String entityName2 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName2});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName2});
+		String entityId2 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId2});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId2});
 			// construct expected error object
 		RestError expectedError = super.systemService.getRestError(new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", ""), new Locale("ru",  "RU"));
 			// construct update data
-		ManagedArea updatingEntity = new ManagedArea();
-		updatingEntity.setName(entityName2); // try to rename the entity to the existing name
+		ConfigurationItemType updatingEntity = new ConfigurationItemType();
+		updatingEntity.setName(entityId2); // try to rename the entity to the existing name
 		updatingEntity.setDescription("Изменённое тестовое описание.");
 			// construct HTTP request
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
-		HttpEntity<ManagedArea> request = new HttpEntity<>(updatingEntity, headers);
+		HttpEntity<ConfigurationItemType> request = new HttpEntity<>(updatingEntity, headers);
 		// WHEN
 			// RestTemplate.put() is void for somewhat reason, hence the fallback to RestTemplate.exchange()
 		ResponseEntity<RestError> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.PUT, request, new ParameterizedTypeReference<RestError>() {});
@@ -232,8 +231,8 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
 		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
 			// extra check directly in database that the entity that would be modified remains unmodified
-		Map<String, Object> unmodifiedEntity = super.jdbcTemplate.queryForMap("SELECT name, description FROM managed_area WHERE (id = ?)", (Object[])new Long[] {entityId1});
-		assertThat(unmodifiedEntity.get("name"), is(entityName1));
+		Map<String, Object> unmodifiedEntity = super.jdbcTemplate.queryForMap("SELECT id, description FROM configuration_item_type WHERE (id = ?)", (Object[])new Long[] {entityId1});
+		assertThat(unmodifiedEntity.get("name"), is(entityId1));
 		assertThat(unmodifiedEntity.get("description"), is("Тестовое описание."));
 	}
 
@@ -242,11 +241,11 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 	public void update_Op_Reports_When_JSON_Has_Wrong_Schema() {
 		// GIVEN
 			// create an entity to be updated; add task to delete this entity after the test
-		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName1});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 			// construct expected error object
 		RestError expectedError = super.systemService.getRestError(new WrongDataException("MANAGEDAREABAD", ""), new Locale("ru",  "RU"));
 			// construct a bad entity
@@ -270,8 +269,8 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
 		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
 			// extra check directly in database that the entity that would be modified remains unmodified
-		Map<String, Object> unmodifiedEntity = super.jdbcTemplate.queryForMap("SELECT name, description FROM managed_area WHERE (id = ?)", (Object[])new Long[] {entityId1});
-		assertThat(unmodifiedEntity.get("name"), is(entityName1));
+		Map<String, Object> unmodifiedEntity = super.jdbcTemplate.queryForMap("SELECT id, description FROM configuration_item_type WHERE (id = ?)", (Object[])new Long[] {entityId1});
+		assertThat(unmodifiedEntity.get("name"), is(entityId1));
 		assertThat(unmodifiedEntity.get("description"), is("Тестовое описание."));
 	}
 
@@ -281,17 +280,17 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 	public void delete_Op_Deletes_Entity() {
 		// GIVEN
 			// create an entity to be deleted; add task to delete this entity after the test, just in case if delete fails for any reason
-		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityName1});
-		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 		// WHEN
 		ResponseEntity<Void> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.DELETE, null, new ParameterizedTypeReference<Void>() {});
 		// THEN
 		assertThat( response.getStatusCode(), is(HttpStatus.OK) );
 			// extra check directly in database that the entity is deleted
-		Integer entityCount = super.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Integer.class);
+		Integer entityCount = super.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Integer.class);
 		assertThat(entityCount, is(0));
 	}
 
@@ -318,6 +317,6 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
 		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
 	}
-
+    */
 
 }

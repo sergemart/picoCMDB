@@ -1,8 +1,5 @@
 package com.github.sergemart.picocmdb.rest;
 
-import com.github.sergemart.picocmdb.domain.ManagedArea;
-import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
-import com.github.sergemart.picocmdb.service.ManagedAreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +7,9 @@ import java.util.List;
 
 import com.github.sergemart.picocmdb.exception.WrongDataException;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
+import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
+import com.github.sergemart.picocmdb.domain.ManagedArea;
+import com.github.sergemart.picocmdb.service.ManagedAreaService;
 
 
 @RestController
