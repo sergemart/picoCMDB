@@ -50,7 +50,7 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 	    assertThat(entityList, hasSize(greaterThan(1)));
 	}
 
-	/*
+
 	@Test
 	public void read_Op_Reads_Entity() {
 		// GIVEN
@@ -58,22 +58,19 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
-			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 		// WHEN
 		ConfigurationItemType receivedEntity = super.restTemplate.getForObject(baseResourceUrl + entityId1, ConfigurationItemType.class);
 		// THEN
 		assertThat(receivedEntity.getId(), is(entityId1));
-		assertThat(receivedEntity.getName(), is(entityId1));
 		assertThat(receivedEntity.getDescription(), is("Тестовое описание."));
 	}
 
-
+	
 	@Test
 	public void read_Op_Reports_When_No_Such_Entity() {
 		// GIVEN
 			// construct expected error object
-		RestError expectedError = super.systemService.getRestError(new NoSuchObjectException("MANAGEDAREANOTFOUND", ""), Locale.ENGLISH);
+		RestError expectedError = super.systemService.getRestError(new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", ""), Locale.ENGLISH);
 		// WHEN
 		RestError receivedError = super.restTemplate.getForObject(baseResourceUrl + "nosuchid", RestError.class);
 		// THEN
@@ -95,33 +92,32 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// construct a new entity and a HTTP request
 		ConfigurationItemType newEntity = new ConfigurationItemType();
-		newEntity.setName(entityId1);
+		newEntity.setId(entityId1);
 		newEntity.setDescription("Тестовое описание.");
 		HttpEntity<ConfigurationItemType> request = new HttpEntity<>(newEntity);
 		// WHEN
 		ConfigurationItemType receivedEntity = super.restTemplate.postForObject(baseResourceUrl, request, ConfigurationItemType.class);
 		// THEN
-		assertThat( receivedEntity.getId(), not(is( nullValue() )) );
-		assertThat(receivedEntity.getName(), is(entityId1));
+		assertThat(receivedEntity.getId(), is(entityId1));
 		assertThat(receivedEntity.getDescription(), is("Тестовое описание."));
 		// extra check directly in database
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
-		assertThat(entityId1, is( receivedEntity.getId()) );
+		String entityDescription = super.jdbcTemplate.queryForObject("SELECT description FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, String.class);
+		assertThat(entityDescription, is( receivedEntity.getDescription()) );
 	}
 
-
+	
 	@Test
-	public void create_Op_Reports_When_Entity_With_Same_Name_Exists() {
+	public void create_Op_Reports_When_Entity_With_Same_Id_Exists() {
 		// GIVEN
 			// create an entity; add task to delete this entity after the test
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// construct expected error object
-		RestError expectedError = super.systemService.getRestError(new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", ""), new Locale("ru",  "RU"));
+		RestError expectedError = super.systemService.getRestError(new ObjectAlreadyExistsException("CONFIGURATIONITEMTYPEEXISTS", ""), new Locale("ru",  "RU"));
 			// construct a new entity
 		ConfigurationItemType newEntity = new ConfigurationItemType();
-		newEntity.setName(entityId1);
+		newEntity.setId(entityId1);
 		newEntity.setDescription("Ещё одно описание.");
 			// construct HTTP request
 		HttpHeaders headers = new HttpHeaders();
@@ -138,12 +134,12 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
 	}
 
-
+	
 	@Test
 	public void create_Op_Reports_When_JSON_Has_Wrong_Schema() {
 		// GIVEN
 			// construct expected error object
-		RestError expectedError = super.systemService.getRestError(new WrongDataException("MANAGEDAREABAD", ""), new Locale("ru",  "RU"));
+		RestError expectedError = super.systemService.getRestError(new WrongDataException("CONFIGURATIONITEMTYPEBAD", ""), new Locale("ru",  "RU"));
 			// construct a bad entity
 		JSONObject newEntity = new JSONObject();
 		newEntity.put("badfield1", "badfieldvalue");
@@ -169,16 +165,12 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 	@Test
 	public void update_Op_Updates_Entity() {
 		// GIVEN
-			// create an entity to be updated
+			// create an entity to be updated; add task to delete the entity after the test
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
-			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
-			// add task to delete the entity by ID (name will be changed) after the test
-		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new Long[] {entityId1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// construct update data and a HTTP request
 		ConfigurationItemType updatingEntity = new ConfigurationItemType();
-		updatingEntity.setName(entityId1 + "_modified");
 		updatingEntity.setDescription("Изменённое тестовое описание.");
 		HttpEntity<ConfigurationItemType> request = new HttpEntity<>(updatingEntity);
 		// WHEN
@@ -187,92 +179,12 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		ConfigurationItemType receivedEntity = response.getBody();
 		// THEN
 		assertThat(receivedEntity.getId(), is(entityId1));
-		assertThat(receivedEntity.getName(), is(entityId1 + "_modified"));
 		assertThat(receivedEntity.getDescription(), is("Изменённое тестовое описание."));
 			// extra check directly in database
-		Map<String, Object> modifiedEntity = super.jdbcTemplate.queryForMap("SELECT id, description FROM configuration_item_type WHERE (id = ?)", (Object[])new Long[] {entityId1});
-		assertThat(modifiedEntity.get("name"), is(entityId1 + "_modified"));
+		Map<String, Object> modifiedEntity = super.jdbcTemplate.queryForMap("SELECT id, description FROM configuration_item_type WHERE (id = ?)", (Object[])new String[] {entityId1});
 		assertThat(modifiedEntity.get("description"), is("Изменённое тестовое описание."));
 	}
 
-
-	@Test
-	public void update_Op_Reports_When_Entity_With_Same_Name_Exists() {
-		// GIVEN
-			// create an entity to be updated; add task to delete this entity after the test
-		String entityId1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
-		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
-			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
-			// create an entity what will be a conflicting existing entity; add task to delete this entity after the test
-		String entityId2 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId2});
-		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId2});
-			// construct expected error object
-		RestError expectedError = super.systemService.getRestError(new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", ""), new Locale("ru",  "RU"));
-			// construct update data
-		ConfigurationItemType updatingEntity = new ConfigurationItemType();
-		updatingEntity.setName(entityId2); // try to rename the entity to the existing name
-		updatingEntity.setDescription("Изменённое тестовое описание.");
-			// construct HTTP request
-		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
-		HttpEntity<ConfigurationItemType> request = new HttpEntity<>(updatingEntity, headers);
-		// WHEN
-			// RestTemplate.put() is void for somewhat reason, hence the fallback to RestTemplate.exchange()
-		ResponseEntity<RestError> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.PUT, request, new ParameterizedTypeReference<RestError>() {});
-		RestError receivedError = response.getBody();
-		// THEN
-		assertThat( receivedError.getExceptionName(), is(expectedError.getExceptionName()) );
-		assertThat( receivedError.getErrorName(), is(expectedError.getErrorName()) );
-		assertThat( receivedError.getErrorCode(), is(expectedError.getErrorCode()) );
-		assertThat( receivedError.getMessage(), not(is(nullValue())) );
-		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
-		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
-			// extra check directly in database that the entity that would be modified remains unmodified
-		Map<String, Object> unmodifiedEntity = super.jdbcTemplate.queryForMap("SELECT id, description FROM configuration_item_type WHERE (id = ?)", (Object[])new Long[] {entityId1});
-		assertThat(unmodifiedEntity.get("name"), is(entityId1));
-		assertThat(unmodifiedEntity.get("description"), is("Тестовое описание."));
-	}
-
-
-	@Test
-	public void update_Op_Reports_When_JSON_Has_Wrong_Schema() {
-		// GIVEN
-			// create an entity to be updated; add task to delete this entity after the test
-		String entityId1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
-		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
-			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
-			// construct expected error object
-		RestError expectedError = super.systemService.getRestError(new WrongDataException("MANAGEDAREABAD", ""), new Locale("ru",  "RU"));
-			// construct a bad entity
-		JSONObject updatingEntity = new JSONObject();
-		updatingEntity.put("badfield1", "badfieldvalue");
-		updatingEntity.put("badfield2", "Некое значение.");
-			// construct HTTP request
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
-		HttpEntity<JSONObject> request = new HttpEntity<>(updatingEntity, headers);
-		// WHEN
-			// RestTemplate.put() is void for somewhat reason, hence the fallback to RestTemplate.exchange()
-		ResponseEntity<RestError> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.PUT, request, new ParameterizedTypeReference<RestError>() {});
-		RestError receivedError = response.getBody();
-		// THEN
-		assertThat( receivedError.getExceptionName(), is(expectedError.getExceptionName()) );
-		assertThat( receivedError.getErrorName(), is(expectedError.getErrorName()) );
-		assertThat( receivedError.getErrorCode(), is(expectedError.getErrorCode()) );
-		assertThat( receivedError.getMessage(), not(is(nullValue())) );
-		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
-		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
-			// extra check directly in database that the entity that would be modified remains unmodified
-		Map<String, Object> unmodifiedEntity = super.jdbcTemplate.queryForMap("SELECT id, description FROM configuration_item_type WHERE (id = ?)", (Object[])new Long[] {entityId1});
-		assertThat(unmodifiedEntity.get("name"), is(entityId1));
-		assertThat(unmodifiedEntity.get("description"), is("Тестовое описание."));
-	}
 
 	// -------------- DELETE --------------
 
@@ -283,8 +195,6 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[] {entityId1});
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
-			// get auto-generated entity ID
-		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, Long.class);
 		// WHEN
 		ResponseEntity<Void> response = super.restTemplate.exchange(baseResourceUrl + entityId1, HttpMethod.DELETE, null, new ParameterizedTypeReference<Void>() {});
 		// THEN
@@ -299,7 +209,7 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 	public void delete_Op_Reports_When_No_Such_Entity() {
 		// GIVEN
 			// construct expected error object
-		RestError expectedError = super.systemService.getRestError(new NoSuchObjectException("MANAGEDAREANOTFOUND", ""), new Locale("ru",  "RU"));
+		RestError expectedError = super.systemService.getRestError(new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", ""), new Locale("ru",  "RU"));
 		// WHEN
 			// construct HTTP request
 		HttpHeaders headers = new HttpHeaders();
@@ -317,6 +227,5 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
 		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
 	}
-    */
 
 }

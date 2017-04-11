@@ -120,7 +120,7 @@ public class ConfigurationItemTypeServiceTests extends AbstractUnitTests {
 
 
 	@Test
-	public void createConfigurationItemType_Reports_When_ConfigurationItemType_Name_Is_Null()
+	public void createConfigurationItemType_Reports_When_ConfigurationItemType_Id_Is_Null()
 			throws ObjectAlreadyExistsException, WrongDataException {
 		// GIVEN
 		super.expectedException.expect(WrongDataException.class);
@@ -134,7 +134,7 @@ public class ConfigurationItemTypeServiceTests extends AbstractUnitTests {
 
 
 	@Test
-	public void createConfigurationItemType_Reports_When_ConfigurationItemType_With_Same_Name_Exists()
+	public void createConfigurationItemType_Reports_When_ConfigurationItemType_With_Same_Id_Exists()
 			throws ObjectAlreadyExistsException, WrongDataException {
 		// GIVEN
 		super.expectedException.expect(ObjectAlreadyExistsException.class);

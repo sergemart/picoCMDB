@@ -140,7 +140,7 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 
 
 	@Test
-	public void create_Op_Reports_When_JSON_Has_Wrong_Schema() {
+	public void create_Op_Reports_When_No_Required_Data() {
 		// GIVEN
 			// construct expected error object
 		RestError expectedError = super.systemService.getRestError(new WrongDataException("MANAGEDAREABAD", ""), new Locale("ru",  "RU"));
@@ -238,7 +238,7 @@ public class ManagedAreaRestControllerIT extends AbstractIntegrationTests {
 
 
 	@Test
-	public void update_Op_Reports_When_JSON_Has_Wrong_Schema() {
+	public void update_Op_Reports_When_No_Required_Data() {
 		// GIVEN
 			// create an entity to be updated; add task to delete this entity after the test
 		String entityName1 = "DUMMY" + super.getSalt();
