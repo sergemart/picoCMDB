@@ -12,11 +12,11 @@ public interface ManagedAreaService {
 
 	List<ManagedArea> getAllManagedAreas();
 
-	ManagedArea createManagedArea(ManagedArea managedArea)
-			throws ObjectAlreadyExistsException, WrongDataException;
-
 	ManagedArea getManagedArea(Long id)
 			throws NoSuchObjectException;
+
+	ManagedArea createManagedArea(ManagedArea managedArea)
+			throws ObjectAlreadyExistsException, WrongDataException;
 
 	ManagedArea updateManagedArea(Long existingManagedAreaId, ManagedArea managedArea)
 			throws ObjectAlreadyExistsException, WrongDataException, NoSuchObjectException;

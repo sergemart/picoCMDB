@@ -23,8 +23,6 @@ import java.util.List;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
 
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
 public class ManagedAreaServiceTests extends AbstractUnitTests {
 
 	@Autowired
@@ -45,6 +43,49 @@ public class ManagedAreaServiceTests extends AbstractUnitTests {
 		assertNotNull(this.managedArea);
 		// all MockBeans are defined in super to avoid multiple Spring context loading
 		assertNotNull(super.managedAreaDao);
+	}
+
+	// -------------- READ --------------
+
+	@Test
+	public void getAllManagedAreas_Returns_ManagedArea_List() {
+		// GIVEN
+		given(managedArea.getId()).willReturn(1L);
+		given(managedArea2.getId()).willReturn(2L);
+		List<ManagedArea> result = Arrays.asList(managedArea, managedArea2);
+		given(managedAreaDao.findAll()).willReturn(result);
+		// WHEN
+		managedAreaService.getAllManagedAreas();
+		// THEN
+		verify(managedAreaDao, times(1)).findAll();
+		assertEquals(1L, (long)managedAreaService.getAllManagedAreas().get(0).getId());
+		assertEquals(2L, (long)managedAreaService.getAllManagedAreas().get(1).getId());
+	}
+
+
+	@Test
+	public void getManagedArea_Returns_ManagedArea()
+			throws NoSuchObjectException {
+		// GIVEN
+		given(managedArea.getId()).willReturn(1L);
+		given( managedAreaDao.findById(anyLong()) ).willReturn(managedArea);
+		// WHEN
+		managedAreaService.getManagedArea(1L);
+		// THEN
+		verify(managedAreaDao, times(1)).findById(1L);
+		assertEquals(1L, (long)managedAreaService.getManagedArea(1L).getId());
+	}
+
+
+	@Test(expected = NoSuchObjectException.class)
+	public void getManagedArea_Reports_When_No_Such_ManagedArea()
+			throws NoSuchObjectException {
+		// GIVEN
+		given(managedAreaDao.findById(anyLong())).willReturn(null);
+		// WHEN
+		managedAreaService.getManagedArea(1L);
+		// THEN
+		verify(managedAreaDao, times(1)).findById(1L);
 	}
 
 	// -------------- CREATE --------------
@@ -122,49 +163,6 @@ public class ManagedAreaServiceTests extends AbstractUnitTests {
 		managedAreaService.createManagedArea(managedArea);
 		// THEN
 		verify(managedAreaDao, times(1)).save(managedArea);
-	}
-
-	// -------------- READ --------------
-
-	@Test
-	public void getAllManagedAreas_Returns_ManagedArea_List() {
-		// GIVEN
-		given(managedArea.getId()).willReturn(1L);
-		given(managedArea2.getId()).willReturn(2L);
-		List<ManagedArea> result = Arrays.asList(managedArea, managedArea2);
-		given(managedAreaDao.findAll()).willReturn(result);
-		// WHEN
-		managedAreaService.getAllManagedAreas();
-		// THEN
-		verify(managedAreaDao, times(1)).findAll();
-		assertEquals(1L, (long)managedAreaService.getAllManagedAreas().get(0).getId());
-		assertEquals(2L, (long)managedAreaService.getAllManagedAreas().get(1).getId());
-	}
-
-
-	@Test
-	public void getManagedArea_Returns_ManagedArea()
-			throws NoSuchObjectException {
-		// GIVEN
-		given(managedArea.getId()).willReturn(1L);
-		given( managedAreaDao.findById(anyLong()) ).willReturn(managedArea);
-		// WHEN
-		managedAreaService.getManagedArea(1L);
-		// THEN
-		verify(managedAreaDao, times(1)).findById(1L);
-		assertEquals(1L, (long)managedAreaService.getManagedArea(1L).getId());
-	}
-
-
-	@Test(expected = NoSuchObjectException.class)
-	public void getManagedArea_Reports_When_No_Such_ManagedArea()
-			throws NoSuchObjectException {
-		// GIVEN
-		given(managedAreaDao.findById(anyLong())).willReturn(null);
-		// WHEN
-		managedAreaService.getManagedArea(1L);
-		// THEN
-		verify(managedAreaDao, times(1)).findById(1L);
 	}
 
 	// -------------- UPDATE --------------
@@ -283,7 +281,7 @@ public class ManagedAreaServiceTests extends AbstractUnitTests {
 	public void deleteManagedArea_Reports_WhenNo_Such_ManagedArea()
 			throws NoSuchObjectException {
 		// GIVEN
-		doThrow(EmptyResultDataAccessException.class).when(managedAreaDao).delete(anyLong());
+		doThrow(EmptyResultDataAccessException.class).when(managedAreaDao).delete(anyLong()); //BDDMockito.given() could not be applied to void method
 		super.expectedException.expect(NoSuchObjectException.class);
 		super.expectedException.expectMessage("No Managed Area identified by '1' found");
 		// WHEN

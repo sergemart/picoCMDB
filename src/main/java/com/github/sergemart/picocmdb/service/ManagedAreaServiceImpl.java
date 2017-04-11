@@ -21,13 +21,35 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 	@Autowired
 	private ManagedAreaDao managedAreaDao;
 
+	// -------------- READ --------------
+
 	/**
-	 * [C]reates new ManagedArea object.
+	 * Reads all stored ManagedArea objects.
+	 */
+	public List<ManagedArea> getAllManagedAreas() {
+		return managedAreaDao.findAll();
+	}
+
+
+	/**
+	 * Reads stored ManagedArea object.
+	 */
+	public ManagedArea getManagedArea(Long managedAreaId)
+			throws NoSuchObjectException {
+		ManagedArea result =  managedAreaDao.findById(managedAreaId);
+		if (result == null) throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");
+		return result;
+	}
+
+	// -------------- CREATE --------------
+
+	/**
+	 * Creates new ManagedArea object.
 	 */
 	public ManagedArea createManagedArea(ManagedArea managedArea)
 			throws ObjectAlreadyExistsException, WrongDataException {
 		if (managedArea == null) throw new WrongDataException("MANAGEDAREABAD", "Managed Area is not provided.");
-		// to check if the new name doesn't conflict with names of existing objects
+		// check if the new name doesn't conflict with names of existing objects
 		String newObjectName = managedArea.getName();
 		if (newObjectName == null) throw new WrongDataException("MANAGEDAREABAD", "Managed Area name is not provided.");
 		if (managedAreaDao.findByName(newObjectName) != null) throw new ObjectAlreadyExistsException("MANAGEDAREAEXISTS", "Managed Area named '" + newObjectName + "' already exists.");
@@ -38,28 +60,10 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 		}
 	}
 
+	// -------------- UPDATE --------------
 
 	/**
-	 * [R]eads all stored ManagedArea objects.
-	 */
-	public List<ManagedArea> getAllManagedAreas() {
-		return managedAreaDao.findAll();
-	}
-
-
-	/**
-	 * [R]eads stored ManagedArea object.
-	 */
-	public ManagedArea getManagedArea(Long managedAreaId)
-			throws NoSuchObjectException {
-		ManagedArea result =  managedAreaDao.findById(managedAreaId);
-		if (result == null) throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");
-		return result;
-	}
-
-
-	/**
-	 * [U]pdates stored ManagedArea object.
+	 * Updates stored ManagedArea object.
 	 * @param currentManagedAreaId Stored ManagedArea object ID.
 	 * @param newManagedAreaData Data to be updated.
 	 */
@@ -89,9 +93,10 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 		}
 	}
 
+	// -------------- DELETE --------------
 
 	/**
-	 * [D]eletes stored ManagedArea object.
+	 * Deletes stored ManagedArea object.
 	 */
 	public void deleteManagedArea(Long managedAreaId)
 			throws NoSuchObjectException {

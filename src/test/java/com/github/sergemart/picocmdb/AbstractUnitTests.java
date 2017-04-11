@@ -1,5 +1,6 @@
 package com.github.sergemart.picocmdb;
 
+import com.github.sergemart.picocmdb.dao.ConfigurationItemTypeDao;
 import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,15 +22,23 @@ import com.github.sergemart.picocmdb.dao.RoleDao;
 @SpringBootTest
 public abstract class AbstractUnitTests {
 
-	@MockBean							// to create and inject mock
+	// create and inject common mocks
+
+	@MockBean
 	protected Environment env;
-	@MockBean							// to create and inject mock
+	@MockBean
 	protected ResourceBundleMessageSource errorMessageSource;
 
-	@MockBean							// to create and inject mock
+	// create and inject DAO mocks
+
+	@MockBean
 	protected RoleDao roleDao;
-	@MockBean                            // to create and inject mock
+	@MockBean
 	protected ManagedAreaDao managedAreaDao;
+	@MockBean
+	protected ConfigurationItemTypeDao configurationItemTypeDao;
+
+	// JUnit rules
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none(); // there is no public constructor

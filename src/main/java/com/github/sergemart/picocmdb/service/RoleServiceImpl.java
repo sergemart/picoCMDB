@@ -16,6 +16,7 @@ public class RoleServiceImpl implements RoleService {
 	@Autowired
 	private RoleDao roleDao;
 
+	// -------------- READ --------------
 
 	public List<Role> getAllRoles() {
 		return roleDao.findAll();

@@ -10,5 +10,6 @@ public interface RoleService {
 
 	List<Role> getAllRoles();
 
-	Role getRole(String id) throws NoSuchObjectException;
+	Role getRole(String id)
+			throws NoSuchObjectException;
 }
