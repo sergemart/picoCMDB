@@ -1,21 +1,22 @@
 package com.github.sergemart.picocmdb.domain;
 
 import org.hibernate.annotations.DynamicUpdate;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 
 
 @Entity
 @DynamicUpdate // to put only modified columns into SQL 'UPDATE' statement
-public class ManagedArea {
+public class ConfigurationItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // to conform with Heroku Postgres
 	private Long id;
 	private String name;
     private String description;
+	@ManyToOne
+	@JoinColumn(name = "ci_type_id")
+    private ConfigurationItemType type;
 
 
 	public Long getId() {
@@ -42,6 +43,14 @@ public class ManagedArea {
         this.description = description;
     }
 
+	public ConfigurationItemType getType() {
+		return type;
+	}
+
+	public void setType(ConfigurationItemType type) {
+		this.type = type;
+	}
+
 
 	// Overrides
 
@@ -50,11 +59,12 @@ public class ManagedArea {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		ManagedArea that = (ManagedArea) o;
+		ConfigurationItem that = (ConfigurationItem) o;
 
 		if (!id.equals(that.id)) return false;
 		if (!name.equals(that.name)) return false;
-		return description != null ? description.equals(that.description) : that.description == null;
+		if (description != null ? !description.equals(that.description) : that.description != null) return false;
+		return type.equals(that.type);
 	}
 
 
@@ -63,8 +73,10 @@ public class ManagedArea {
 		int result = id.hashCode();
 		result = 31 * result + name.hashCode();
 		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + type.hashCode();
 		return result;
 	}
+
 
 }
 
