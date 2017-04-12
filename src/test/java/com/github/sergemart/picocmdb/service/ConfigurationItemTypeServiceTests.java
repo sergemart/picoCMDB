@@ -1,14 +1,11 @@
 package com.github.sergemart.picocmdb.service;
 
-import com.github.sergemart.picocmdb.AbstractUnitTests;
-import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
-import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
-import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,6 +17,11 @@ import static org.mockito.BDDMockito.*;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.sergemart.picocmdb.AbstractUnitTests;
+import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
+import com.github.sergemart.picocmdb.exception.DependencyExistsException;
+import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
+import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
 
 
@@ -238,7 +240,7 @@ public class ConfigurationItemTypeServiceTests extends AbstractUnitTests {
 
 	@Test
 	public void deleteConfigurationItemType_Deletes_ConfigurationItemType()
-			throws NoSuchObjectException {
+			throws NoSuchObjectException, DependencyExistsException {
 		// WHEN
 		configurationItemTypeService.deleteConfigurationItemType("dummy");
 		// THEN
@@ -247,8 +249,8 @@ public class ConfigurationItemTypeServiceTests extends AbstractUnitTests {
 
 
 	@Test
-	public void deleteConfigurationItemType_Reports_WhenNo_Such_ConfigurationItemType()
-			throws NoSuchObjectException {
+	public void deleteConfigurationItemType_Reports_When_No_Such_ConfigurationItemType()
+			throws NoSuchObjectException, DependencyExistsException {
 		// GIVEN
 		doThrow(EmptyResultDataAccessException.class).when(configurationItemTypeDao).delete(anyString()); //BDDMockito.given() could not be applied to void method
 		super.expectedException.expect(NoSuchObjectException.class);
@@ -259,5 +261,18 @@ public class ConfigurationItemTypeServiceTests extends AbstractUnitTests {
 		verify(configurationItemTypeDao, times(1)).delete("dummy");
 	}
 
+
+	@Test
+	public void deleteConfigurationItemType_Reports_When_Dependent_ConfigurationItem_Exists()
+			throws NoSuchObjectException, DependencyExistsException {
+		// GIVEN
+		doThrow(DataIntegrityViolationException.class).when(configurationItemTypeDao).delete(anyString()); //BDDMockito.given() could not be applied to void method
+		super.expectedException.expect(DependencyExistsException.class);
+		super.expectedException.expectMessage("Configuration Item classified as 'dummy' exists");
+		// WHEN
+		configurationItemTypeService.deleteConfigurationItemType("dummy");
+		// THEN
+		verify(configurationItemTypeDao, times(1)).delete("dummy");
+	}
 
 }

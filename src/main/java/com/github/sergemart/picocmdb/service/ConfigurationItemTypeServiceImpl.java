@@ -3,6 +3,7 @@ package com.github.sergemart.picocmdb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
+import com.github.sergemart.picocmdb.exception.DependencyExistsException;
 
 import java.util.List;
 
@@ -88,11 +90,13 @@ public class ConfigurationItemTypeServiceImpl implements ConfigurationItemTypeSe
 	 * Deletes stored ConfigurationItemType object.
 	 */
 	public void deleteConfigurationItemType(String configurationItemTypeId)
-			throws NoSuchObjectException {
+			throws NoSuchObjectException, DependencyExistsException {
 		try { // to persist
 			configurationItemTypeDao.delete(configurationItemTypeId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DependencyExistsException("CONFIGURATIONITEMEXISTS", "Configuration Item classified as '" + configurationItemTypeId + "' exists.");
 		}
 	}
 

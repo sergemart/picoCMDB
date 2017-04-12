@@ -8,6 +8,7 @@ import java.util.List;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
+import com.github.sergemart.picocmdb.exception.DependencyExistsException;
 import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 import com.github.sergemart.picocmdb.service.ConfigurationItemTypeService;
 
@@ -76,7 +77,7 @@ public class ConfigurationItemTypeRestController {
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, path = "/{configurationItemTypeId}")
 	public void deleteConfigurationItemType(@PathVariable("configurationItemTypeId") String configurationItemTypeId)
-			throws NoSuchObjectException {
+			throws NoSuchObjectException, DependencyExistsException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
 			configurationItemTypeService.deleteConfigurationItemType(configurationItemTypeId);
 		} catch (NumberFormatException e) {

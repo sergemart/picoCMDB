@@ -161,10 +161,10 @@ public class ConfigurationItemTypeDaoIT extends AbstractIntegrationTests {
 	public void delete_By_Id_Reports_When_Entity_Has_Child_Entities() {
 		// GIVEN
 		super.expectedException.expect(DataIntegrityViolationException.class);
-			// create a parent entity; add task to delete this entity after the test
+			// create a parent entity which would be deleted
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {entityId1});
-			// create a child entity; add task to delete this entity after the test
+			// create a child entity
 		String childName1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName1, entityId1});
 			// add tasks (in right order) to delete test entities after the test

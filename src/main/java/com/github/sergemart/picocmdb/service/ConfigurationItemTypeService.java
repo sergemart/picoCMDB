@@ -6,6 +6,7 @@ import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
+import com.github.sergemart.picocmdb.exception.DependencyExistsException;
 
 
 public interface ConfigurationItemTypeService {
@@ -22,6 +23,6 @@ public interface ConfigurationItemTypeService {
 			throws ObjectAlreadyExistsException, WrongDataException, NoSuchObjectException;
 
 	void deleteConfigurationItemType(String configurationItemTypeId)
-			throws NoSuchObjectException;
+			throws NoSuchObjectException, DependencyExistsException;
 
 }

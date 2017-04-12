@@ -17,6 +17,7 @@ import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
+import com.github.sergemart.picocmdb.exception.DependencyExistsException;
 
 
 public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTests {
@@ -210,12 +211,45 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		// GIVEN
 			// construct expected error object
 		RestError expectedError = super.systemService.getRestError(new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", ""), new Locale("ru",  "RU"));
-		// WHEN
 			// construct HTTP request
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
 		HttpEntity<Void> request = new HttpEntity<>(null, headers);
+		// WHEN
 		ResponseEntity<RestError> response = super.restTemplate.exchange(baseResourceUrl + "nosuchid", // no such entity
+				HttpMethod.DELETE, request, new ParameterizedTypeReference<RestError>() {});
+		RestError receivedError = response.getBody();
+		// THEN
+		assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+		assertThat( receivedError.getExceptionName(), is(expectedError.getExceptionName()) );
+		assertThat( receivedError.getErrorName(), is(expectedError.getErrorName()) );
+		assertThat( receivedError.getErrorCode(), is(expectedError.getErrorCode()) );
+		assertThat( receivedError.getMessage(), not(is(nullValue())) );
+		assertThat( receivedError.getLocalizedMessage(), is(expectedError.getLocalizedMessage()) );
+		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
+	}
+
+
+	@Test
+	public void delete_Op_Reports_When_Dependent_Entity_Exists() {
+		// GIVEN
+			// construct expected error object
+		RestError expectedError = super.systemService.getRestError(new DependencyExistsException("CONFIGURATIONITEMEXISTS", ""), new Locale("ru",  "RU"));
+		// create a parent entity which would be deleted
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {entityId1});
+		// create a child entity
+		String childName1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName1, entityId1});
+		// add tasks (in right order) to delete test entities after the test
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {childName1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
+			// construct HTTP request
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.ACCEPT_LANGUAGE, "ru-RU"); // switch language; expected message should be in Russian
+		HttpEntity<Void> request = new HttpEntity<>(null, headers);
+		// WHEN
+		ResponseEntity<RestError> response = super.restTemplate.exchange(baseResourceUrl + entityId1,
 				HttpMethod.DELETE, request, new ParameterizedTypeReference<RestError>() {});
 		RestError receivedError = response.getBody();
 		// THEN

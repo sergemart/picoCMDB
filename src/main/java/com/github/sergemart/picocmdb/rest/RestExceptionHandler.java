@@ -16,6 +16,7 @@ import com.github.sergemart.picocmdb.exception.WrongDataException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
 import com.github.sergemart.picocmdb.system.SystemService;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
+import com.github.sergemart.picocmdb.exception.DependencyExistsException;
 
 
 @RestControllerAdvice
@@ -44,6 +45,17 @@ public class RestExceptionHandler {
 	@ExceptionHandler(value = ObjectAlreadyExistsException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public RestError handleObjectAlreadyExistsException(ObjectAlreadyExistsException e, @RequestHeader("Accept-Language")Locale locale) {
+		return this.systemService.getRestError(e, locale);
+	}
+
+
+	/**
+	 * Handles exceptions raised when underlying service tries to delete an object with dependencies, for which one cascade deletion is disabled
+	 * @return Error object with message from the exception.
+	 */
+	@ExceptionHandler(value = DependencyExistsException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public RestError handleDependencyExistsException(DependencyExistsException e, @RequestHeader("Accept-Language")Locale locale) {
 		return this.systemService.getRestError(e, locale);
 	}
 
