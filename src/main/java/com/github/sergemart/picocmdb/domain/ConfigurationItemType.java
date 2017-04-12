@@ -1,5 +1,6 @@
 package com.github.sergemart.picocmdb.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 import java.util.Set;
@@ -11,10 +12,11 @@ public class ConfigurationItemType {
 	@Id
 	private String id;
     private String description;
-	@OneToMany(mappedBy = "type", // the field on the other side
+	@JsonIgnore // to break the circular dependency during deserialization to avoid loops and stack overflows
+    @OneToMany(mappedBy = "type", // the field on the other side
 			cascade = CascadeType.ALL, // all entity operations propagate to child
-			orphanRemoval = true)
-    private Set<ConfigurationItem> configurationItems;
+			fetch = FetchType.LAZY)
+	private Set<ConfigurationItem> configurationItems;
 
 
 	public String getId() {
@@ -32,8 +34,8 @@ public class ConfigurationItemType {
     public void setDescription(String description) {
         this.description = description;
     }
-
-	public Set<ConfigurationItem> getConfigurationItems() {
+	
+    public Set<ConfigurationItem> getConfigurationItems() {
 		return configurationItems;
 	}
 
