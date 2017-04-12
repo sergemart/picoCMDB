@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
+import org.junit.rules.ExpectedException;
 
 import java.lang.management.ManagementFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,17 +25,21 @@ public abstract class AbstractIntegrationTests {
 	private static AtomicInteger counter = new AtomicInteger(0);
 	protected String baseUiUrl;
 	protected String baseRestUrl;
+
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
 	@Autowired
 	protected TestRestTemplate restTemplate;
 	@Autowired
 	protected SystemService systemService;
+
 	@Rule
 	public final JdbcCleaner jdbcCleaner = new JdbcCleaner();
+	@Rule
+	public final ExpectedException expectedException = ExpectedException.none(); // there is no public constructor
 
 
-	// to make somewhat unique entities' IDs to prevent constraint violation when test executed in parallel
+	// to make somewhat unique entity IDs to prevent constraint violation when test executed in parallel
 	protected String getSalt() {
 		return String.valueOf(counter.incrementAndGet() + "@" + ManagementFactory.getRuntimeMXBean().getName());
 	}

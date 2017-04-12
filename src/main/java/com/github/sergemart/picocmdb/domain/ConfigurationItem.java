@@ -83,5 +83,14 @@ public class ConfigurationItem {
 	}
 
 
+	@Override
+	public String toString() {
+		return "ConfigurationItem{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", type=" + type +
+				'}';
+	}
 }
 

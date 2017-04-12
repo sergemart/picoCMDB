@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import org.junit.*;
 import static org.junit.Assert.assertThat;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
+import com.github.sergemart.picocmdb.domain.ConfigurationItem;
 
 
 public class ConfigurationItemTypeDaoIT extends AbstractIntegrationTests {
@@ -79,6 +81,44 @@ public class ConfigurationItemTypeDaoIT extends AbstractIntegrationTests {
 		assertThat(daoResult, is(jdbcResult.get(0))); // uses overloaded ConfigurationItemType.equals()
 	}
 
+
+	@Test
+	@Transactional
+	@Rollback
+	public void findById_Finds_Entity_With_Child_Entities() {
+		// GIVEN
+			// create a parent entity; this entity will be deleted on rollback after the test
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {entityId1});
+			// create child entities; these entities will be deleted on rollback after the test
+		String childName1 = "DUMMY" + super.getSalt();
+		String childName2 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName1, entityId1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName2, entityId1});
+			// get the parent entity via JDBC
+		List<ConfigurationItemType> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, new BeanPropertyRowMapper(ConfigurationItemType.class));
+			// get the child entities via JDBC
+		List<ConfigurationItem> jdbcChildren = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (ci_type_id = ?)", new String[] {entityId1},
+				// custom lambda implementation for RowMapper.mapRow() to handle reference field
+				(rs, rowNum) -> {
+					ConfigurationItem ci = new ConfigurationItem();
+					ci.setId(rs.getLong("id"));
+					ci.setName(rs.getString("name"));
+					ConfigurationItemType ciType = new ConfigurationItemType();	ciType.setId(rs.getString("ci_type_id"));
+					ci.setType(ciType);
+					return ci;
+				}
+		);
+		// WHEN
+		ConfigurationItemType daoResult = this.entityDao.findById(entityId1);
+		// THEN
+			// shallow check the parent
+		assertThat(daoResult, is(jdbcResult.get(0))); // uses overloaded ConfigurationItemType.equals()
+			// check the children
+		assertThat(daoResult.getConfigurationItems().toArray(), is( arrayContainingInAnyOrder( jdbcChildren.toArray()) )); // uses overloaded ConfigurationItem.equals()
+	}
+
+
 	// -------------- CREATE --------------
 
 	@Test
@@ -116,5 +156,24 @@ public class ConfigurationItemTypeDaoIT extends AbstractIntegrationTests {
 		assertThat(jdbcResult.size(), is(0));
 	}
 
-    
+
+	@Test
+	public void delete_By_Id_Reports_When_Entity_Has_Child_Entities() {
+		// GIVEN
+		super.expectedException.expect(DataIntegrityViolationException.class);
+			// create a parent entity; add task to delete this entity after the test
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {entityId1});
+			// create a child entity; add task to delete this entity after the test
+		String childName1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName1, entityId1});
+			// add tasks (in right order) to delete test entities after the test
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {childName1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
+		// WHEN
+		this.entityDao.delete(entityId1);
+		// THEN check the exception
+	}
+
+
 }
