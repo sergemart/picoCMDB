@@ -3,6 +3,7 @@ package com.github.sergemart.picocmdb.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.sergemart.picocmdb.exception.WrongDataException;
@@ -10,6 +11,7 @@ import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
 import com.github.sergemart.picocmdb.exception.DependencyExistsException;
 import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
+import com.github.sergemart.picocmdb.domain.ConfigurationItem;
 import com.github.sergemart.picocmdb.service.ConfigurationItemTypeService;
 
 
@@ -20,6 +22,7 @@ public class ConfigurationItemTypeRestController {
     @Autowired
     private ConfigurationItemTypeService configurationItemTypeService;
 
+	// -------------- READ --------------
 
 	/**
 	 * Lists all stored ConfigurationItemType objects when client calls GET /[collection]
@@ -29,17 +32,6 @@ public class ConfigurationItemTypeRestController {
     public List<ConfigurationItemType> getAllConfigurationItemTypes() {
         return configurationItemTypeService.getAllConfigurationItemTypes();
     }
-
-
-	/**
-	 * Creates new ConfigurationItemType object when client calls POST /[collection] with JSON in a request body.
-	 * @return Newly created ConfigurationItemType object.
-	 */
-    @RequestMapping(method = RequestMethod.POST)
-	public ConfigurationItemType createConfigurationItemType(@RequestBody ConfigurationItemType configurationItemType)
-			throws ObjectAlreadyExistsException, WrongDataException {
-		return configurationItemTypeService.createConfigurationItemType(configurationItemType);
-	}
 
 
 	/**
@@ -58,6 +50,34 @@ public class ConfigurationItemTypeRestController {
 
 
 	/**
+	 * Returns ConfigurationItems objects of the ConfigurationItemType when client calls GET /[collection]/[object_ID]/[collection of dependants]
+	 * @return ConfigurationItem objects of the ConfigurationItemType identified by URL subpart
+	 */
+	@RequestMapping(method = RequestMethod.GET, path = "/{configurationItemTypeId}/configurationitems")
+	public List<ConfigurationItem> getConfigurationItemsOfType(@PathVariable("configurationItemTypeId") String configurationItemTypeId)
+			throws NoSuchObjectException {
+		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
+			return new ArrayList<>(configurationItemTypeService.getConfigurationItemType(configurationItemTypeId).getConfigurationItems());
+		} catch (NumberFormatException e) {
+			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
+		}
+	}
+
+	// -------------- CREATE --------------
+
+	/**
+	 * Creates new ConfigurationItemType object when client calls POST /[collection] with JSON in a request body.
+	 * @return Newly created ConfigurationItemType object.
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public ConfigurationItemType createConfigurationItemType(@RequestBody ConfigurationItemType configurationItemType)
+			throws ObjectAlreadyExistsException, WrongDataException {
+		return configurationItemTypeService.createConfigurationItemType(configurationItemType);
+	}
+
+	// -------------- UPDATE --------------
+
+	/**
 	 * Updates ConfigurationItemType object when client calls PUT /[collection]/[object_ID]
 	 * @return Updated ConfigurationItemType object identified by URL subpart
 	 */
@@ -71,6 +91,7 @@ public class ConfigurationItemTypeRestController {
 		}
 	}
 
+	// -------------- DELETE --------------
 
 	/**
 	 * Deletes ConfigurationItemType object when client calls DELETE /[collection]/[object_ID]

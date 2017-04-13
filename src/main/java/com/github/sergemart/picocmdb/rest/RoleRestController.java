@@ -20,6 +20,7 @@ public class RoleRestController {
     @Autowired
     private RoleService roleService;
 
+    // -------------- READ --------------
 
 	@RequestMapping(method = RequestMethod.GET)
     public List<Role> getAllRoles() {

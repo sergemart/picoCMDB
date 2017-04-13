@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
+import com.github.sergemart.picocmdb.domain.ConfigurationItem;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
@@ -82,6 +83,30 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		assertThat( receivedError.getLocalizedMessage(), not(is(nullValue())) );
 		assertThat( receivedError.getTimestamp(), not(is(nullValue())) );
 	}
+
+
+	@Test
+	public void read_Op_Reads_Dependent_Entity_List() {
+		// GIVEN
+			// create a parent entity
+		String entityId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {entityId1});
+			// create child entities
+		String childName1 = "DUMMY" + super.getSalt();
+		String childName2 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName1, entityId1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName2, entityId1});
+			// add tasks (in right order) to delete test entities after the test
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {childName1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {childName2});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
+		// WHEN
+		ResponseEntity<List<ConfigurationItem>> response = super.restTemplate.exchange(baseResourceUrl + entityId1 + "/configurationitems", HttpMethod.GET, null, new ParameterizedTypeReference<List<ConfigurationItem>>() {});
+		List<ConfigurationItem> entityList = response.getBody();
+		// THEN
+		assertThat(entityList, hasSize(2));
+	}
+
 
 	// -------------- CREATE --------------
 
@@ -235,13 +260,13 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		// GIVEN
 			// construct expected error object
 		RestError expectedError = super.systemService.getRestError(new DependencyExistsException("CONFIGURATIONITEMEXISTS", ""), new Locale("ru",  "RU"));
-		// create a parent entity which would be deleted
+			// create a parent entity which would be deleted
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {entityId1});
-		// create a child entity
+			// create a child entity
 		String childName1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[] {childName1, entityId1});
-		// add tasks (in right order) to delete test entities after the test
+			// add tasks (in right order) to delete test entities after the test
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {childName1});
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
 			// construct HTTP request

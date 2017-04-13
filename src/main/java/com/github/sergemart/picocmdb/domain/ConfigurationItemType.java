@@ -14,7 +14,7 @@ public class ConfigurationItemType {
     private String description;
 	@JsonIgnore // to break the circular dependency during deserialization to avoid loops and stack overflows
     @OneToMany(mappedBy = "type", // the field on the other side
-			cascade = CascadeType.DETACH, // all entity operations propagate to child
+			//cascade = CascadeType.ALL, // no operations propagate to childs
 			fetch = FetchType.LAZY)
 	private Set<ConfigurationItem> configurationItems;
 

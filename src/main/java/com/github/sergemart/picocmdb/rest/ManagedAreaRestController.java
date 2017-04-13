@@ -19,6 +19,7 @@ public class ManagedAreaRestController {
     @Autowired
     private ManagedAreaService managedAreaService;
 
+	// -------------- READ --------------
 
 	/**
 	 * Lists all stored ManagedArea objects when client calls GET /[collection]
@@ -28,17 +29,6 @@ public class ManagedAreaRestController {
     public List<ManagedArea> getAllManagedAreas() {
         return managedAreaService.getAllManagedAreas();
     }
-
-
-	/**
-	 * Creates new ManagedArea object when client calls POST /[collection] with JSON in a request body.
-	 * @return Newly created ManagedArea object.
-	 */
-    @RequestMapping(method = RequestMethod.POST)
-	public ManagedArea createManagedArea(@RequestBody ManagedArea managedArea)
-			throws ObjectAlreadyExistsException, WrongDataException {
-		return managedAreaService.createManagedArea(managedArea);
-	}
 
 
 	/**
@@ -55,6 +45,19 @@ public class ManagedAreaRestController {
 		}
     }
 
+	// -------------- CREATE --------------
+
+	/**
+	 * Creates new ManagedArea object when client calls POST /[collection] with JSON in a request body.
+	 * @return Newly created ManagedArea object.
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public ManagedArea createManagedArea(@RequestBody ManagedArea managedArea)
+			throws ObjectAlreadyExistsException, WrongDataException {
+		return managedAreaService.createManagedArea(managedArea);
+	}
+
+	// -------------- UPDATE --------------
 
 	/**
 	 * Updates ManagedArea object when client calls PUT /[collection]/[object_ID]
@@ -70,6 +73,7 @@ public class ManagedAreaRestController {
 		}
 	}
 
+	// -------------- DELETE --------------
 
 	/**
 	 * Deletes ManagedArea object when client calls DELETE /[collection]/[object_ID]
