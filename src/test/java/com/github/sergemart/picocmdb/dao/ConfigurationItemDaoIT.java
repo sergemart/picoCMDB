@@ -13,12 +13,17 @@ import java.util.List;
 
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ConfigurationItem;
+import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 
 
 public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 
 	@Autowired
 	private ConfigurationItemDao entityDao; // the CuT
+
+	@Autowired
+	private ConfigurationItemTypeDao classifierDao; // the CuT's classifier (parent) DAO
+
 
 	// -------------- READ --------------
 
@@ -46,19 +51,35 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 		assertThat(daoResult.get(1), instanceOf(ConfigurationItem.class));
 	}
 
-	/*
+
 	@Test
 	@Transactional
 	@Rollback
 	public void findAll_Finds_All_Stored_Entities() {
 		// GIVEN
+			// create parent (classifier) entity, just in case if the database is empty; the entity will be deleted on rollback after the test
+		String parentId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {parentId1});
 			// create entities, just in case if the database is empty; the entities will be deleted on rollback after the test
 		String entityName1 = "DUMMY" + super.getSalt();
 		String entityName2 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item(name, description) VALUES (?, 'dummy description')", (Object[]) new String[]{entityName1});
-		super.jdbcTemplate.update("INSERT INTO configuration_item(name, description) VALUES (?, 'Тестовое описание.')", (Object[]) new String[]{entityName2});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName2, parentId1});
 			// get the entity instances via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item", new Object[] {}, new BeanPropertyRowMapper(ConfigurationItem.class));
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item", new Object[] {},
+				// custom lambda implementation for RowMapper.mapRow() to handle reference field
+				(rs, rowNum) -> {
+					ConfigurationItem ci = new ConfigurationItem();
+					ci.setId(rs.getLong("id"));
+					ci.setName(rs.getString("name"));
+					ci.setDescription(rs.getString("description"));
+					// handle reference field
+					String ciTypeId = rs.getString("ci_type_id");
+					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
+					ci.setType(ciType);
+					return ci;
+				}
+		);
 		// WHEN
 		List<ConfigurationItem> daoResult = this.entityDao.findAll();
 		// THEN
@@ -71,11 +92,27 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 	@Rollback
 	public void findById_Finds_Entity() {
 		// GIVEN
-		// create an entity; this entity will be deleted on rollback after the test
+			// create parent (classifier) entity; the entity will be deleted on rollback after the test
+		String parentId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {parentId1});
+			// create an entity; the entity will be deleted on rollback after the test
 		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item(name, description) VALUES (?, 'dummy description')", (Object[]) new String[]{entityName1});
-		// get the entity instance via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ConfigurationItem.class));
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
+			// get the entity instance via JDBC
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1},
+				// custom lambda implementation for RowMapper.mapRow() to handle reference field
+				(rs, rowNum) -> {
+					ConfigurationItem ci = new ConfigurationItem();
+					ci.setId(rs.getLong("id"));
+					ci.setName(rs.getString("name"));
+					ci.setDescription(rs.getString("description"));
+					// handle reference field
+					String ciTypeId = rs.getString("ci_type_id");
+					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
+					ci.setType(ciType);
+					return ci;
+				}
+		);
 		// WHEN
 		ConfigurationItem daoResult = this.entityDao.findById( jdbcResult.get(0).getId() );
 		// THEN
@@ -88,11 +125,27 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 	@Rollback
 	public void findByName_Finds_Entity() {
 		// GIVEN
-			// create an entity; this entity will be deleted on rollback after the test
+			// create parent (classifier) entity; the entity will be deleted on rollback after the test
+		String parentId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {parentId1});
+			// create an entity; the entity will be deleted on rollback after the test
 		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item(name, description) VALUES (?, 'dummy description')", (Object[]) new String[]{entityName1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
 			// get the entity instance via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ConfigurationItem.class));
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1},
+				// custom lambda implementation for RowMapper.mapRow() to handle reference field
+				(rs, rowNum) -> {
+					ConfigurationItem ci = new ConfigurationItem();
+					ci.setId(rs.getLong("id"));
+					ci.setName(rs.getString("name"));
+					ci.setDescription(rs.getString("description"));
+					// handle reference field
+					String ciTypeId = rs.getString("ci_type_id");
+					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
+					ci.setType(ciType);
+					return ci;
+				}
+		);
 		// WHEN
 		ConfigurationItem daoResult = this.entityDao.findByName(entityName1);
 		// THEN
@@ -104,18 +157,37 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 	@Test
 	public void save_Creates_Entity() {
 		// GIVEN
-		// add task to delete created entity after the test
+			// create parent (classifier) entity
+		String parentId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {parentId1});
+			// add tasks (in right order) to delete would-be-created and classifier entities after the test
 		String entityName1 = "DUMMY" + super.getSalt();
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {entityName1});
-		// construct an entity
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {parentId1});
+				// construct an entity
 		ConfigurationItem entity = new ConfigurationItem();
 		entity.setName(entityName1);
 		entity.setDescription("dummy description");
+		entity.setType( this.classifierDao.findById(parentId1) ); // use JPA to get context-attached parent entity
 		// WHEN
 		this.entityDao.save(entity);
 		// THEN
-		// get the entity instance via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ConfigurationItem.class));		assertThat(jdbcResult.size(), is(1));
+			// get the entity instance via JDBC
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1},
+				// custom lambda implementation for RowMapper.mapRow() to handle reference field
+				(rs, rowNum) -> {
+					ConfigurationItem ci = new ConfigurationItem();
+					ci.setId(rs.getLong("id"));
+					ci.setName(rs.getString("name"));
+					ci.setDescription(rs.getString("description"));
+					// handle reference field
+					String ciTypeId = rs.getString("ci_type_id");
+					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
+					ci.setType(ciType);
+					return ci;
+				}
+		);
+		assertThat(jdbcResult.size(), is(1));
 		assertThat(jdbcResult.get(0), is(entity));
 	}
 
@@ -126,10 +198,15 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 	@Rollback
 	public void deleteByName_Deletes_Entity() {
 		// GIVEN
-			// create entity to delete; add task to delete this entity after the test just in case if delete failed (JPA transaction would be isolated from JDBC)
+			// create parent (classifier) entity
+		String parentId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {parentId1});
+			// create entity to delete
 		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item(name, description) VALUES (?, 'dummy description')", (Object[]) new String[]{entityName1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
+			// add tasks (in right order) to delete would-be-deleted entity (in case if delete failed) and the classifier entity after the test (JPA transaction would be isolated from JDBC)
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {entityName1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {parentId1});
 		// WHEN
 		this.entityDao.deleteByName(entityName1);
 		// THEN
@@ -140,10 +217,15 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 	@Test
 	public void delete_By_Id_Deletes_Entity() {
 		// GIVEN
-			// create entity to delete; add task to delete this entity after the test just in case if delete failed (JPA transaction would be isolated from JDBC)
+			// create parent (classifier) entity
+		String parentId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {parentId1});
+			// create entity to delete
 		String entityName1 = "DUMMY" + super.getSalt();
-		super.jdbcTemplate.update("INSERT INTO configuration_item(name, description) VALUES (?, 'dummy description')", (Object[]) new String[]{entityName1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
+			// add tasks (in right order) to delete would-be-deleted entity (in case if delete failed) and the classifier entity after the test
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {entityName1});
+		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {parentId1});
 			// get the entity instance via JDBC
 		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ConfigurationItem.class));
 		// WHEN
@@ -152,6 +234,6 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 		jdbcResult = jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ConfigurationItem.class));
 		assertThat(jdbcResult.size(), is(0));
 	}
-    */
+
 
 }

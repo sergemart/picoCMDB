@@ -101,18 +101,19 @@ public class ManagedAreaDaoIT extends AbstractIntegrationTests {
 	@Test
 	public void save_Creates_Entity() {
 		// GIVEN
-		// add task to delete created entity after the test
+			// add task to delete created entity after the test
 		String entityName1 = "DUMMY" + super.getSalt();
 		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});
-		// construct an entity
+			// construct an entity
 		ManagedArea entity = new ManagedArea();
 		entity.setName(entityName1);
 		entity.setDescription("dummy description");
 		// WHEN
 		this.entityDao.save(entity);
 		// THEN
-		// get the entity instance via JDBC
-		List<ManagedArea> jdbcResult = super.jdbcTemplate.query("SELECT * FROM managed_area WHERE (name = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ManagedArea.class));		assertThat(jdbcResult.size(), is(1));
+			// get the entity instance via JDBC
+		List<ManagedArea> jdbcResult = super.jdbcTemplate.query("SELECT * FROM managed_area WHERE (name = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ManagedArea.class));
+		assertThat(jdbcResult.size(), is(1));
 		assertThat(jdbcResult.get(0), is(entity));
 	}
 
@@ -137,7 +138,7 @@ public class ManagedAreaDaoIT extends AbstractIntegrationTests {
 	@Test
 	public void delete_By_Id_Deletes_Entity() {
 		// GIVEN
-			// create entity to delete; add task to delete this entity after the test just in case if delete failed (JPA transaction would be isolated from JDBC)
+			// create entity to delete; add task to delete this entity after the test just in case if delete failed
 		String entityName1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO managed_area(name, description) VALUES (?, 'dummy description')", (Object[]) new String[]{entityName1});
 		super.jdbcCleaner.addTask("DELETE FROM managed_area WHERE (name = ?)", new String[] {entityName1});

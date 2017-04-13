@@ -73,7 +73,7 @@ public class ManagedAreaServiceImpl implements ManagedAreaService {
 		if (currentManagedAreaId == null) throw new WrongDataException("MANAGEDAREABAD", "Current Managed Area ID is not provided.");
 		if (newManagedAreaData == null) throw new WrongDataException("MANAGEDAREABAD", "New Managed Area data are not provided.");
 
-		ManagedArea currentManagedArea = this.getManagedArea(currentManagedAreaId);
+		ManagedArea currentManagedArea = this.getManagedArea(currentManagedAreaId); // get an 'attached' entity
 		// to check if the new name, when provided, doesn't conflict with names of existing objects
 		String currentManagedAreaName = currentManagedArea.getName();
 		String newManagedAreaName = newManagedAreaData.getName();

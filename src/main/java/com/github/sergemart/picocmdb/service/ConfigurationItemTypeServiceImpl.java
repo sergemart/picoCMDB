@@ -75,7 +75,7 @@ public class ConfigurationItemTypeServiceImpl implements ConfigurationItemTypeSe
 		if (currentConfigurationItemTypeId == null) throw new WrongDataException("CONFIGURATIONITEMTYPEBAD", "Current Configuration Item Type ID is not provided.");
 		if (newConfigurationItemTypeData == null) throw new WrongDataException("CONFIGURATIONITEMTYPEBAD", "New Configuration Item Type data are not provided.");
 
-		ConfigurationItemType currentConfigurationItemType = this.getConfigurationItemType(currentConfigurationItemTypeId);
+		ConfigurationItemType currentConfigurationItemType = this.getConfigurationItemType(currentConfigurationItemTypeId); // get an 'attached' entity
 		try { // to persist
 			newConfigurationItemTypeData.setId(currentConfigurationItemTypeId); // enrich new data with ID, making them an object to get JPA call 'merge' instead of 'persist'
 			return configurationItemTypeDao.save(newConfigurationItemTypeData);

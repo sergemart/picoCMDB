@@ -104,8 +104,10 @@ public class ConfigurationItemTypeDaoIT extends AbstractIntegrationTests {
 					ConfigurationItem ci = new ConfigurationItem();
 					ci.setId(rs.getLong("id"));
 					ci.setName(rs.getString("name"));
-					ConfigurationItemType ciType = new ConfigurationItemType();	ciType.setId(rs.getString("ci_type_id"));
-					ci.setType(ciType);
+					// handle reference field
+					String ciTypeId = rs.getString("ci_type_id");
+					List<ConfigurationItemType> ciTypes = super.jdbcTemplate.query("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
+					ci.setType(ciTypes.get(0));
 					return ci;
 				}
 		);
