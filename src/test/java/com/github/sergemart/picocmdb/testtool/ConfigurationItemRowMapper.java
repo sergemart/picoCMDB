@@ -1,6 +1,5 @@
 package com.github.sergemart.picocmdb.testtool;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.Role;
+import com.github.sergemart.picocmdb.testtool.RoleRowMapper;
 
 
 public class RoleDaoIT extends AbstractIntegrationTests {
@@ -55,6 +56,8 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		super.jdbcTemplate.update("INSERT INTO role(id, description, is_system) VALUES (?, 'dummy description', true)", (Object[]) new String[]{entityId1});
 		super.jdbcTemplate.update("INSERT INTO role(id, description, is_system) VALUES (?, 'dummy description', false)", (Object[]) new String[]{entityId2});
 			// get the entity instances via JDBC
+		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role", new Object[] {}, new RoleRowMapper()); // used custom RowMapper; Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
+/*
 		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role", new Object[] {},
 				// custom lambda implementation for RowMapper.mapRow(); Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
 				(rs, rowNum) -> {
@@ -65,6 +68,7 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 					return role;
 				}
 		);
+		*/
 		// WHEN
 		List<Role> daoResult = this.entityDao.findAll();
 		// THEN
