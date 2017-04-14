@@ -57,18 +57,6 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		super.jdbcTemplate.update("INSERT INTO role(id, description, is_system) VALUES (?, 'dummy description', false)", (Object[]) new String[]{entityId2});
 			// get the entity instances via JDBC
 		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role", new Object[] {}, new RoleRowMapper()); // used custom RowMapper; Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
-/*
-		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role", new Object[] {},
-				// custom lambda implementation for RowMapper.mapRow(); Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
-				(rs, rowNum) -> {
-					Role role = new Role();
-					role.setId(rs.getString("id"));
-					role.setDescription(rs.getString("description"));
-					role.setSystem(rs.getBoolean("is_system"));
-					return role;
-				}
-		);
-		*/
 		// WHEN
 		List<Role> daoResult = this.entityDao.findAll();
 		// THEN
@@ -85,16 +73,7 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		String entityId1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO role(id, description, is_system) VALUES (?, 'dummy description', true)", (Object[]) new String[] {entityId1});
 			// get the entity instance via JDBC
-		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1},
-				// custom lambda implementation for RowMapper.mapRow(); Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
-				(rs, rowNum) -> {
-					Role role = new Role();
-					role.setId(rs.getString("id"));
-					role.setDescription(rs.getString("description"));
-					role.setSystem(rs.getBoolean("is_system"));
-					return role;
-				}
-		);
+		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1}, new RoleRowMapper()); // used custom RowMapper; Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
 		// WHEN
 		Role daoResult = this.entityDao.findById(entityId1);
 		// THEN
@@ -118,16 +97,7 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		this.entityDao.save(entity);
 		// THEN
 			// get the entity instance via JDBC
-		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1},
-				// custom lambda implementation for RowMapper.mapRow(); Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
-				(rs, rowNum) -> {
-					Role role = new Role();
-					role.setId(rs.getString("id"));
-					role.setDescription(rs.getString("description"));
-					role.setSystem(rs.getBoolean("is_system"));
-					return role;
-				}
-		);
+		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1}, new RoleRowMapper()); // used custom RowMapper; Spring BeanPropertyRowMapper can not properly map 'is_system' field, due to its 'non-standard' name
 		assertThat(jdbcResult.size(), is(1));
 		assertThat(jdbcResult.get(0), is(entity));
 	}
