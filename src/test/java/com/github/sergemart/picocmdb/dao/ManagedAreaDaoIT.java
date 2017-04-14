@@ -13,6 +13,8 @@ import java.util.List;
 
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ManagedArea;
+import com.github.sergemart.picocmdb.domain.ConfigurationItem;
+import com.github.sergemart.picocmdb.testtool.ConfigurationItemRowMapper;
 
 
 public class ManagedAreaDaoIT extends AbstractIntegrationTests {
@@ -94,6 +96,44 @@ public class ManagedAreaDaoIT extends AbstractIntegrationTests {
 		ManagedArea daoResult = this.entityDao.findByName(entityName1);
 		// THEN
 		assertThat(daoResult, is(jdbcResult.get(0))); // uses overloaded ManagedArea.equals()
+	}
+
+
+	@Test
+	@Transactional
+	@Rollback
+	public void findByName_Finds_Entity_With_Linked_Entities() {
+		// GIVEN
+			// create a tested entity; this entity will be deleted on rollback after the test
+		String entityName1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO managed_area(name) VALUES (?)", (Object[]) new String[] {entityName1});
+			// get auto-generated ID of the created tested entity
+		Long entityId1 = super.jdbcTemplate.queryForObject("SELECT id FROM managed_area WHERE (name = ?)", new String[] {entityName1}, Long.class);
+			// create parent (classifier) entity for linked entities; the entity will be deleted on rollback after the test
+		String parentId1 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item_type(id) VALUES (?)", (Object[]) new String[] {parentId1});
+			// create will-be-linked entities; the entities will be deleted on rollback after the test
+		String linkedName1 = "DUMMY" + super.getSalt();
+		String linkedName2 = "DUMMY" + super.getSalt();
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{linkedName1, parentId1});
+		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{linkedName2, parentId1});
+			// get auto-generated IDs of created will-be-linked entities
+		Long linkedId1 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item WHERE (name = ?)", new String[] {linkedName1}, Long.class);
+		Long linkedId2 = super.jdbcTemplate.queryForObject("SELECT id FROM configuration_item WHERE (name = ?)", new String[] {linkedName2}, Long.class);
+			// create links between the tested entity and will-be-linked entities; these links will be deleted on rollback after the test
+		super.jdbcTemplate.update("INSERT INTO ci_marea_link(ci_id, marea_id) VALUES (?, ?)", (Object[]) new Long[] {linkedId1, entityId1});
+		super.jdbcTemplate.update("INSERT INTO ci_marea_link(ci_id, marea_id) VALUES (?, ?)", (Object[]) new Long[] {linkedId2, entityId1});
+			// get the tested entity via JDBC
+		List<ManagedArea> jdbcResult = super.jdbcTemplate.query("SELECT * FROM managed_area WHERE (name = ?)", new String[] {entityName1}, new BeanPropertyRowMapper(ManagedArea.class));
+			// get the linked entities via JDBC
+		List<ConfigurationItem> jdbcLinked = super.jdbcTemplate.query("SELECT * FROM configuration_item i, configuration_item_type t WHERE (i.name = ? OR i.name = ?) AND (i.ci_type_id = t.id)", new String[] {linkedName1, linkedName2}, new ConfigurationItemRowMapper());
+		// WHEN
+		ManagedArea daoResult = this.entityDao.findByName(entityName1);
+		// THEN
+			// shallow check the tested entity
+		assertThat(daoResult, is(jdbcResult.get(0))); // uses overloaded ManagedArea.equals()
+			// check the linked entities
+		assertThat(daoResult.getConfigurationItems().toArray(), is( arrayContainingInAnyOrder( jdbcLinked.toArray()) )); // uses overloaded ConfigurationItem.equals()
 	}
 
 	// -------------- CREATE --------------
