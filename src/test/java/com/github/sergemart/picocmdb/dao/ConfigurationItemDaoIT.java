@@ -1,5 +1,6 @@
 package com.github.sergemart.picocmdb.dao;
 
+import com.github.sergemart.picocmdb.testtool.ConfigurationItemRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.test.annotation.Rollback;
@@ -66,20 +67,7 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
 		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName2, parentId1});
 			// get the entity instances via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item", new Object[] {},
-				// custom lambda implementation for RowMapper.mapRow() to handle reference field
-				(rs, rowNum) -> {
-					ConfigurationItem ci = new ConfigurationItem();
-					ci.setId(rs.getLong("id"));
-					ci.setName(rs.getString("name"));
-					ci.setDescription(rs.getString("description"));
-					// handle reference field
-					String ciTypeId = rs.getString("ci_type_id");
-					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
-					ci.setType(ciType);
-					return ci;
-				}
-		);
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item i, configuration_item_type t WHERE (i.ci_type_id = t.id)", new Object[] {}, new ConfigurationItemRowMapper());
 		// WHEN
 		List<ConfigurationItem> daoResult = this.entityDao.findAll();
 		// THEN
@@ -99,20 +87,7 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 		String entityName1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
 			// get the entity instance via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1},
-				// custom lambda implementation for RowMapper.mapRow() to handle reference field
-				(rs, rowNum) -> {
-					ConfigurationItem ci = new ConfigurationItem();
-					ci.setId(rs.getLong("id"));
-					ci.setName(rs.getString("name"));
-					ci.setDescription(rs.getString("description"));
-					// handle reference field
-					String ciTypeId = rs.getString("ci_type_id");
-					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
-					ci.setType(ciType);
-					return ci;
-				}
-		);
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item i, configuration_item_type t WHERE (i.name = ?) AND (i.ci_type_id = t.id)", new String[] {entityName1}, new ConfigurationItemRowMapper());
 		// WHEN
 		ConfigurationItem daoResult = this.entityDao.findById( jdbcResult.get(0).getId() );
 		// THEN
@@ -132,20 +107,7 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 		String entityName1 = "DUMMY" + super.getSalt();
 		super.jdbcTemplate.update("INSERT INTO configuration_item(name, ci_type_id) VALUES (?, ?)", (Object[]) new String[]{entityName1, parentId1});
 			// get the entity instance via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1},
-				// custom lambda implementation for RowMapper.mapRow() to handle reference field
-				(rs, rowNum) -> {
-					ConfigurationItem ci = new ConfigurationItem();
-					ci.setId(rs.getLong("id"));
-					ci.setName(rs.getString("name"));
-					ci.setDescription(rs.getString("description"));
-					// handle reference field
-					String ciTypeId = rs.getString("ci_type_id");
-					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
-					ci.setType(ciType);
-					return ci;
-				}
-		);
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item i, configuration_item_type t WHERE (i.name = ?) AND (i.ci_type_id = t.id)", new String[] {entityName1}, new ConfigurationItemRowMapper());
 		// WHEN
 		ConfigurationItem daoResult = this.entityDao.findByName(entityName1);
 		// THEN
@@ -173,20 +135,7 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 		this.entityDao.save(entity);
 		// THEN
 			// get the entity instance via JDBC
-		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (name = ?)", new String[] {entityName1},
-				// custom lambda implementation for RowMapper.mapRow() to handle reference field
-				(rs, rowNum) -> {
-					ConfigurationItem ci = new ConfigurationItem();
-					ci.setId(rs.getLong("id"));
-					ci.setName(rs.getString("name"));
-					ci.setDescription(rs.getString("description"));
-					// handle reference field
-					String ciTypeId = rs.getString("ci_type_id");
-					ConfigurationItemType ciType = (ConfigurationItemType)super.jdbcTemplate.queryForObject("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
-					ci.setType(ciType);
-					return ci;
-				}
-		);
+		List<ConfigurationItem> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item i, configuration_item_type t WHERE (i.name = ?) AND (i.ci_type_id = t.id)", new String[] {entityName1}, new ConfigurationItemRowMapper());
 		assertThat(jdbcResult.size(), is(1));
 		assertThat(jdbcResult.get(0), is(entity));
 	}

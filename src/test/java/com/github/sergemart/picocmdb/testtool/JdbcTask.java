@@ -1,4 +1,4 @@
-package com.github.sergemart.picocmdb.junitrule;
+package com.github.sergemart.picocmdb.testtool;
 
 import java.util.Arrays;
 

@@ -14,7 +14,7 @@ import org.junit.rules.ExpectedException;
 import java.lang.management.ManagementFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.github.sergemart.picocmdb.junitrule.JdbcCleaner;
+import com.github.sergemart.picocmdb.testtool.JdbcCleaner;
 import com.github.sergemart.picocmdb.system.SystemService;
 
 

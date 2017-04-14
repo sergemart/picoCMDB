@@ -1,22 +1,39 @@
 package com.github.sergemart.picocmdb.domain;
 
 import org.hibernate.annotations.DynamicUpdate;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+
+import java.util.Set;
 
 
 @Entity
 @DynamicUpdate // to put only modified columns into SQL 'UPDATE' statement
 public class ManagedArea {
 
+	// Attributes
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // to conform with Heroku Postgres
 	private Long id;
 	private String name;
     private String description;
+	@ManyToMany(cascade = CascadeType.ALL) // all state changes propagate to children
+	@JoinTable(
+			name = "ci_marea_link",
+			joinColumns = @JoinColumn(
+					name = "marea_id",
+					referencedColumnName = "id"
+			),
+			inverseJoinColumns = @JoinColumn(
+					name = "ci_id",
+					referencedColumnName = "id"
+			)
+	)
+    private Set<ConfigurationItem> configurationItems;
 
+
+	// Getters/setters
 
 	public Long getId() {
         return id;
@@ -42,8 +59,12 @@ public class ManagedArea {
         this.description = description;
     }
 
+	public Set<ConfigurationItem> getConfigurationItems() {
+		return configurationItems;
+	}
 
-	// Overrides
+
+	// Overrides; have no referenced attributes involved in order to avoid loops and stack overflows
 
 	@Override
 	public boolean equals(Object o) {

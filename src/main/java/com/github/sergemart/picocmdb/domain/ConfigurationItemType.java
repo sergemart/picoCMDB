@@ -9,6 +9,8 @@ import java.util.Set;
 @Entity
 public class ConfigurationItemType {
 
+	// Attributes
+
 	@Id
 	private String id;
     private String description;
@@ -18,6 +20,8 @@ public class ConfigurationItemType {
 			fetch = FetchType.LAZY)
 	private Set<ConfigurationItem> configurationItems;
 
+
+	// Getters/setters
 
 	public String getId() {
         return id;
@@ -40,7 +44,7 @@ public class ConfigurationItemType {
 	}
 
 
-	// Overrides; have no 'configurationItems' references in order to avoid loops and stack overflows
+	// Overrides; have no referenced attributes involved in order to avoid loops and stack overflows
 
 	@Override
 	public boolean equals(Object o) {

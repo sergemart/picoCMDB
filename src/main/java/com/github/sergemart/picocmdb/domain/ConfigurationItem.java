@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 @DynamicUpdate // to put only modified columns into SQL 'UPDATE' statement
 public class ConfigurationItem {
 
+	// Attributes
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // to conform with Heroku Postgres
 	private Long id;
@@ -23,6 +25,8 @@ public class ConfigurationItem {
 	@JoinColumn(name = "ci_type_id")
     private ConfigurationItemType type;
 
+
+	// Getters/setters
 
 	public Long getId() {
         return id;

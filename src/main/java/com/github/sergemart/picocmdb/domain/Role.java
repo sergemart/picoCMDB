@@ -5,11 +5,15 @@ import javax.persistence.*;
 @Entity
 public class Role {
 
+	// Attributes
+
 	@Id
 	private String id;
     private String description;
 	private boolean isSystem;
 
+
+	// Getters/setters
 
 	public String getId() {
         return id;
