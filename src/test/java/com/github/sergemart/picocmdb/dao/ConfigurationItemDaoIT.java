@@ -1,6 +1,5 @@
 package com.github.sergemart.picocmdb.dao;
 
-import com.github.sergemart.picocmdb.testtool.ConfigurationItemRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.test.annotation.Rollback;
@@ -14,7 +13,7 @@ import java.util.List;
 
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ConfigurationItem;
-import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
+import com.github.sergemart.picocmdb.testtool.ConfigurationItemRowMapper;
 
 
 public class ConfigurationItemDaoIT extends AbstractIntegrationTests {

@@ -15,6 +15,7 @@ import java.util.List;
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 import com.github.sergemart.picocmdb.domain.ConfigurationItem;
+import com.github.sergemart.picocmdb.testtool.ConfigurationItemRowMapper;
 
 
 public class ConfigurationItemTypeDaoIT extends AbstractIntegrationTests {
@@ -98,19 +99,7 @@ public class ConfigurationItemTypeDaoIT extends AbstractIntegrationTests {
 			// get the parent entity via JDBC
 		List<ConfigurationItemType> jdbcResult = super.jdbcTemplate.query("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1}, new BeanPropertyRowMapper(ConfigurationItemType.class));
 			// get the child entities via JDBC
-		List<ConfigurationItem> jdbcChildren = super.jdbcTemplate.query("SELECT * FROM configuration_item WHERE (ci_type_id = ?)", new String[] {entityId1},
-				// custom lambda implementation for RowMapper.mapRow() to handle reference field
-				(rs, rowNum) -> {
-					ConfigurationItem ci = new ConfigurationItem();
-					ci.setId(rs.getLong("id"));
-					ci.setName(rs.getString("name"));
-					// handle reference field
-					String ciTypeId = rs.getString("ci_type_id");
-					List<ConfigurationItemType> ciTypes = super.jdbcTemplate.query("SELECT * FROM configuration_item_type WHERE (id = ?)", new String[] {ciTypeId}, new BeanPropertyRowMapper(ConfigurationItemType.class));
-					ci.setType(ciTypes.get(0));
-					return ci;
-				}
-		);
+		List<ConfigurationItem> jdbcChildren = super.jdbcTemplate.query("SELECT * FROM configuration_item i, configuration_item_type t WHERE (i.ci_type_id = ?) AND (i.ci_type_id = t.id)", new String[] {entityId1}, new ConfigurationItemRowMapper());
 		// WHEN
 		ConfigurationItemType daoResult = this.entityDao.findById(entityId1);
 		// THEN
