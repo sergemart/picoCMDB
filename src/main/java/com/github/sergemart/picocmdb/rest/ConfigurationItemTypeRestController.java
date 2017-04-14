@@ -30,7 +30,7 @@ public class ConfigurationItemTypeRestController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
     public List<ConfigurationItemType> getAllConfigurationItemTypes() {
-        return configurationItemTypeService.getAllConfigurationItemTypes();
+        return this.configurationItemTypeService.getAllConfigurationItemTypes();
     }
 
 
@@ -42,24 +42,24 @@ public class ConfigurationItemTypeRestController {
     public ConfigurationItemType getConfigurationItemType(@PathVariable("configurationItemTypeId") String configurationItemTypeId)
 			throws NoSuchObjectException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
-			return configurationItemTypeService.getConfigurationItemType(configurationItemTypeId);
+			return this.configurationItemTypeService.getConfigurationItemType(configurationItemTypeId);
 		} catch (NumberFormatException e) {
-			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
+			throw new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
 		}
     }
 
 
 	/**
-	 * Returns ConfigurationItems objects of the ConfigurationItemType when client calls GET /[collection]/[object_ID]/[collection of dependants]
-	 * @return ConfigurationItem objects of the ConfigurationItemType identified by URL subpart
+	 * Returns ConfigurationItems objects of the ConfigurationItemType when client calls GET /[collection]/[object_ID]/[collection_of_dependants]
+	 * @return ConfigurationItem objects of the ConfigurationItemType, which is identified by URL subpart
 	 */
 	@RequestMapping(method = RequestMethod.GET, path = "/{configurationItemTypeId}/configurationitems")
 	public List<ConfigurationItem> getConfigurationItemsOfType(@PathVariable("configurationItemTypeId") String configurationItemTypeId)
 			throws NoSuchObjectException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
-			return new ArrayList<>(configurationItemTypeService.getConfigurationItemType(configurationItemTypeId).getConfigurationItems());
+			return new ArrayList<>(this.configurationItemTypeService.getConfigurationItemType(configurationItemTypeId).getConfigurationItems());
 		} catch (NumberFormatException e) {
-			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
+			throw new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
 		}
 	}
 
@@ -72,7 +72,7 @@ public class ConfigurationItemTypeRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ConfigurationItemType createConfigurationItemType(@RequestBody ConfigurationItemType configurationItemType)
 			throws ObjectAlreadyExistsException, WrongDataException {
-		return configurationItemTypeService.createConfigurationItemType(configurationItemType);
+		return this.configurationItemTypeService.createConfigurationItemType(configurationItemType);
 	}
 
 	// -------------- UPDATE --------------
@@ -85,9 +85,9 @@ public class ConfigurationItemTypeRestController {
 	public ConfigurationItemType updateConfigurationItemType(@PathVariable("currentConfigurationItemTypeId") String currentConfigurationItemTypeId, @RequestBody ConfigurationItemType newConfigurationItemTypeData)
 			throws NoSuchObjectException, ObjectAlreadyExistsException, WrongDataException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
-			return configurationItemTypeService.updateConfigurationItemType(currentConfigurationItemTypeId, newConfigurationItemTypeData);
+			return this.configurationItemTypeService.updateConfigurationItemType(currentConfigurationItemTypeId, newConfigurationItemTypeData);
 		} catch (NumberFormatException e) {
-			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Configuration Item Type identified by '" + currentConfigurationItemTypeId + "' found.");
+			throw new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", "No Configuration Item Type identified by '" + currentConfigurationItemTypeId + "' found.");
 		}
 	}
 
@@ -100,9 +100,9 @@ public class ConfigurationItemTypeRestController {
 	public void deleteConfigurationItemType(@PathVariable("configurationItemTypeId") String configurationItemTypeId)
 			throws NoSuchObjectException, DependencyExistsException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
-			configurationItemTypeService.deleteConfigurationItemType(configurationItemTypeId);
+			this.configurationItemTypeService.deleteConfigurationItemType(configurationItemTypeId);
 		} catch (NumberFormatException e) {
-			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
+			throw new NoSuchObjectException("CONFIGURATIONITEMTYPENOTFOUND", "No Configuration Item Type identified by '" + configurationItemTypeId + "' found.");
 		}
 
 	}

@@ -15,6 +15,7 @@ import java.util.Map;
 import com.github.sergemart.picocmdb.AbstractIntegrationTests;
 import com.github.sergemart.picocmdb.domain.ConfigurationItemType;
 import com.github.sergemart.picocmdb.domain.ConfigurationItem;
+import com.github.sergemart.picocmdb.testtool.ConfigurationItemRowMapper;
 import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import com.github.sergemart.picocmdb.exception.ObjectAlreadyExistsException;
 import com.github.sergemart.picocmdb.exception.WrongDataException;
@@ -47,9 +48,9 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId2});
 		// WHEN
 		ResponseEntity<List<ConfigurationItemType>> response = super.restTemplate.exchange(baseResourceUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<ConfigurationItemType>>() {});
-		List<ConfigurationItemType> entityList = response.getBody();
+		List<ConfigurationItemType> receivedEntityList = response.getBody();
 		// THEN
-	    assertThat(entityList, hasSize(greaterThan(1)));
+	    assertThat(receivedEntityList, hasSize(greaterThan(1)));
 	}
 
 
@@ -100,11 +101,17 @@ public class ConfigurationItemTypeRestControllerIT extends AbstractIntegrationTe
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {childName1});
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item WHERE (name = ?)", new String[] {childName2});
 		super.jdbcCleaner.addTask("DELETE FROM configuration_item_type WHERE (id = ?)", new String[] {entityId1});
+			// get the linked entities via JDBC
+		List<ConfigurationItem> jdbcLinked = super.jdbcTemplate.query("SELECT * FROM configuration_item i, configuration_item_type t WHERE (i.name = ? OR i.name = ?) AND (i.ci_type_id = t.id)", new String[] {childName1, childName2}, new ConfigurationItemRowMapper());
+
 		// WHEN
 		ResponseEntity<List<ConfigurationItem>> response = super.restTemplate.exchange(baseResourceUrl + entityId1 + "/configurationitems", HttpMethod.GET, null, new ParameterizedTypeReference<List<ConfigurationItem>>() {});
-		List<ConfigurationItem> entityList = response.getBody();
+		List<ConfigurationItem> receivedEntityList = response.getBody();
 		// THEN
-		assertThat(entityList, hasSize(2));
+			// rough check
+		assertThat(receivedEntityList, hasSize(2));
+			// thorough check
+		assertThat(receivedEntityList.toArray(), is( arrayContainingInAnyOrder( jdbcLinked.toArray()) )); // uses overloaded ConfigurationItem.equals()
 	}
 
 

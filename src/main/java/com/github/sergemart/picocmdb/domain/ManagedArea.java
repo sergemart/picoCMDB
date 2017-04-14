@@ -1,7 +1,7 @@
 package com.github.sergemart.picocmdb.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
-
 import javax.persistence.*;
 
 import java.util.Set;
@@ -18,7 +18,8 @@ public class ManagedArea {
 	private Long id;
 	private String name;
     private String description;
-	@ManyToMany(cascade = CascadeType.ALL) // all state changes propagate to children
+	@JsonIgnore // to break the circular dependency during deserialization to avoid loops and stack overflows
+    @ManyToMany(cascade = CascadeType.ALL) // all state changes propagate to children
 	@JoinTable(
 			name = "ci_marea_link",
 			joinColumns = @JoinColumn(

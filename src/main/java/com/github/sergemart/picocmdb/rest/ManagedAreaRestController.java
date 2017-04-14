@@ -1,8 +1,10 @@
 package com.github.sergemart.picocmdb.rest;
 
+import com.github.sergemart.picocmdb.domain.ConfigurationItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.sergemart.picocmdb.exception.WrongDataException;
@@ -27,7 +29,7 @@ public class ManagedAreaRestController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
     public List<ManagedArea> getAllManagedAreas() {
-        return managedAreaService.getAllManagedAreas();
+        return this.managedAreaService.getAllManagedAreas();
     }
 
 
@@ -39,11 +41,27 @@ public class ManagedAreaRestController {
     public ManagedArea getManagedArea(@PathVariable("managedAreaId") String managedAreaId)
 			throws NoSuchObjectException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
-			return managedAreaService.getManagedArea(Long.valueOf(managedAreaId));
+			return this.managedAreaService.getManagedArea(Long.valueOf(managedAreaId));
 		} catch (NumberFormatException e) {
 			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");
 		}
     }
+
+
+	/**
+	 * Returns ConfigurationItems objects linked to the ManagedArea when client calls GET /[collection]/[object_ID]/[collection_of_linked_objects]
+	 * @return ConfigurationItem objects linked to the ManagedArea, which is identified by URL subpart
+	 */
+	@RequestMapping(method = RequestMethod.GET, path = "/{managedAreaId}/configurationitems")
+	public List<ConfigurationItem> getConfigurationItemsOfManagedArea(@PathVariable("managedAreaId") String managedAreaId)
+			throws NoSuchObjectException {
+		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
+			return new ArrayList<>(this.managedAreaService.getManagedArea(Long.valueOf(managedAreaId)).getConfigurationItems());
+		} catch (NumberFormatException e) {
+			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");
+		}
+	}
+
 
 	// -------------- CREATE --------------
 
@@ -54,7 +72,7 @@ public class ManagedAreaRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ManagedArea createManagedArea(@RequestBody ManagedArea managedArea)
 			throws ObjectAlreadyExistsException, WrongDataException {
-		return managedAreaService.createManagedArea(managedArea);
+		return this.managedAreaService.createManagedArea(managedArea);
 	}
 
 	// -------------- UPDATE --------------
@@ -67,7 +85,7 @@ public class ManagedAreaRestController {
 	public ManagedArea updateManagedArea(@PathVariable("currentManagedAreaId") String currentManagedAreaId, @RequestBody ManagedArea newManagedAreaData)
 			throws NoSuchObjectException, ObjectAlreadyExistsException, WrongDataException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
-			return managedAreaService.updateManagedArea(Long.valueOf(currentManagedAreaId), newManagedAreaData);
+			return this.managedAreaService.updateManagedArea(Long.valueOf(currentManagedAreaId), newManagedAreaData);
 		} catch (NumberFormatException e) {
 			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + currentManagedAreaId + "' found.");
 		}
@@ -82,7 +100,7 @@ public class ManagedAreaRestController {
 	public void deleteManagedArea(@PathVariable("managedAreaId") String managedAreaId)
 			throws NoSuchObjectException {
 		try { // to more precise format checking; general handler of last resort is in RestExceptionHandler class
-			managedAreaService.deleteManagedArea(Long.valueOf(managedAreaId));
+			this.managedAreaService.deleteManagedArea(Long.valueOf(managedAreaId));
 		} catch (NumberFormatException e) {
 			throw new NoSuchObjectException("MANAGEDAREANOTFOUND", "No Managed Area identified by '" + managedAreaId + "' found.");
 		}
