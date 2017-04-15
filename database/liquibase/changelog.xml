@@ -292,10 +292,8 @@
 
 	<!-- manual -->
 
-	<changeSet author="SergM" id="2017032704">
+	<changeSet author="SergM" id="2017032701">
 		<sql>
-			USE picocmdb;
-
 			INSERT INTO ci_marea_link(ci_id, marea_id)
 			-- all ConfigurationItems belong to 'picoCMDB - All components' ManagedArea
 			SELECT c.id, m.id FROM configuration_item c, managed_area m WHERE m.name LIKE '%All components'
@@ -307,8 +305,6 @@
 			;
 		</sql>
 		<rollback>
-			USE picocmdb;
-
 			DELETE FROM ci_marea_link WHERE marea_id = (
 			SELECT id FROM managed_area WHERE name LIKE "%All components"
 			);

@@ -201,6 +201,7 @@
 						<referenceUsername>${mvn.model.datasource.username}</referenceUsername>
 						<referencePassword>${mvn.model.datasource.password}</referencePassword>
 						<diffChangeLogFile>${mvn.liquibase.changelog}</diffChangeLogFile>
+						<rollbackCount>1</rollbackCount> <!-- roll back a last change set on :rollback goal invocation -->
 					</configuration>
 					<executions>
 						<execution>
