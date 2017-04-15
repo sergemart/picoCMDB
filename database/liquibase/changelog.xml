@@ -298,7 +298,16 @@
 			-- all ConfigurationItems belong to 'picoCMDB - All components' ManagedArea
 			SELECT c.id, m.id FROM configuration_item c, managed_area m WHERE m.name LIKE '%All components'
 			;
-
+		</sql>
+		<rollback>
+			DELETE FROM ci_marea_link WHERE marea_id = (
+			SELECT id FROM managed_area WHERE name LIKE "%All components"
+			);
+		</rollback>
+		<comment>Add sample links between 'managed_area' (All components) and 'configuration_item'.</comment>
+	</changeSet>
+	<changeSet author="SergM" id="2017032702">
+		<sql>
 			INSERT INTO ci_marea_link(ci_id, marea_id)
 			-- ConfigurationItems of some types belong to 'picoCMDB - Infrastructure' ManagedArea
 			SELECT c.id, m.id FROM configuration_item c, managed_area m WHERE m.name LIKE '%Infrastructure' AND c.ci_type_id IN ('CLOUD', 'COMPUTER', 'DBMS', 'CONTAINER')
@@ -306,14 +315,10 @@
 		</sql>
 		<rollback>
 			DELETE FROM ci_marea_link WHERE marea_id = (
-			SELECT id FROM managed_area WHERE name LIKE "%All components"
-			);
-
-			DELETE FROM ci_marea_link WHERE marea_id = (
 			SELECT id FROM managed_area WHERE name LIKE "%Infrastructure"
 			);
 		</rollback>
-		<comment>Add sample links between 'managed_area' and 'configuration_item'.</comment>
+		<comment>Add sample links between 'managed_area' (Infrastructure) and 'configuration_item'.</comment>
 	</changeSet>
 
 </databaseChangeLog>
