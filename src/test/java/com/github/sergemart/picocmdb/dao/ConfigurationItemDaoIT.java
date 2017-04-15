@@ -70,7 +70,7 @@ public class ConfigurationItemDaoIT extends AbstractIntegrationTests {
 		// WHEN
 		List<ConfigurationItem> daoResult = this.entityDao.findAll();
 		// THEN
-		assertThat(daoResult, is (jdbcResult)); // uses overloaded ConfigurationItem.equals(); valid check because changes are isolated by transaction
+		assertThat(daoResult.toArray(), is( arrayContainingInAnyOrder(jdbcResult.toArray()) )); // uses overloaded ConfigurationItem.equals(); valid check because changes are isolated by transaction
 	}
 
 

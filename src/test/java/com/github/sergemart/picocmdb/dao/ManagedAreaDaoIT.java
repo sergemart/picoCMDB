@@ -61,7 +61,7 @@ public class ManagedAreaDaoIT extends AbstractIntegrationTests {
 		// WHEN
 		List<ManagedArea> daoResult = this.entityDao.findAll();
 		// THEN
-		assertThat(daoResult, is (jdbcResult)); // uses overloaded ManagedArea.equals(); valid check because changes are isolated by transaction
+		assertThat(daoResult.toArray(), is( arrayContainingInAnyOrder(jdbcResult.toArray()) )); // uses overloaded ManagedArea.equals(); valid check because changes are isolated by transaction
 	}
 
 

@@ -60,7 +60,7 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		// WHEN
 		List<Role> daoResult = this.entityDao.findAll();
 		// THEN
-		assertThat(daoResult, is (jdbcResult)); // uses overloaded Role.equals(); valid check because changes are isolated by transaction
+		assertThat(daoResult.toArray(), is( arrayContainingInAnyOrder(jdbcResult.toArray()) )); // uses overloaded Role.equals(); valid check because changes are isolated by transaction
 	}
 
 
