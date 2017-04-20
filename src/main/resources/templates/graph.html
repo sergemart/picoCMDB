@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/fragments :: common-header">
+</head>
+
+<body>
+
+<div class="container">
+    <div th:replace="common/fragments :: common-navbar">
+    </div>
+    
+    <div class="row" id="main-wrapper-row">
+        <div class="col-sm-3">
+            <ul class="nav list-group">
+                <li>
+                    <a class="list-group-item" href="#">Sidebar Item 1</a>
+                </li>
+                <li>
+                    <a class="list-group-item" href="#">Sidebar Item 2</a>
+                </li>
+                <li>
+                    <a class="list-group-item" href="#">Sidebar Item 3</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-sm-9">
+            <div class="panel">
+                <div class="panel-body">Граф</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="common/fragments :: common-scripts">
+</div>
+
+</body>
+</html>

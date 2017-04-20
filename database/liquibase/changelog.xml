@@ -292,6 +292,7 @@
 
 	<!-- manual -->
 
+	<!-- SQL statements are placed in separate changeSets to conform Heroku Postgres (Liquibase/MySQL doesn't require this).  -->
 	<changeSet author="SergM" id="2017032701">
 		<sql>
 			INSERT INTO ci_marea_link(ci_id, marea_id)

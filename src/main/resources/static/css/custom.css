@@ -1,0 +1,11 @@
+body {
+	background-color: transparent;
+}
+
+html {
+	background: gray;
+	background: -webkit-linear-gradient(to right, #777777, #dddddd);
+	background: -o-linear-gradient(to right, #777777, #dddddd);
+	background: -moz-linear-gradient(to right, #777777, #dddddd);
+	background: linear-gradient(to right, #777777, #dddddd)
+}
