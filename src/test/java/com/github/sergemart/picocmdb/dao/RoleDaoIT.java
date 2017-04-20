@@ -114,7 +114,7 @@ public class RoleDaoIT extends AbstractIntegrationTests {
 		// WHEN
 		this.entityDao.delete(entityId1);
 		// THEN
-		List<Role> jdbcResult = jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1}, new BeanPropertyRowMapper(Role.class));
+		List<Role> jdbcResult = super.jdbcTemplate.query("SELECT * FROM role WHERE (id = ?)", new String[] {entityId1}, new BeanPropertyRowMapper(Role.class));
 		assertThat(jdbcResult.size(), is(0));
 	}
 

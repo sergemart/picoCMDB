@@ -28,6 +28,10 @@ public class ConfigurationItemRelationType {
 		return description;
 	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 
 	// Overrides; have no referenced attributes involved in order to avoid loops and stack overflows
 
