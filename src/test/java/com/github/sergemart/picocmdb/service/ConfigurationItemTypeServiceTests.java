@@ -3,7 +3,6 @@ package com.github.sergemart.picocmdb.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import org.junit.Assert;
 import org.junit.Before;

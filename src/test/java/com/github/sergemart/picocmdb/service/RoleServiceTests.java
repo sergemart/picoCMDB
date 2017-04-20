@@ -1,8 +1,5 @@
 package com.github.sergemart.picocmdb.service;
 
-import com.github.sergemart.picocmdb.AbstractUnitTests;
-import com.github.sergemart.picocmdb.domain.Role;
-import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.junit.Test;
@@ -15,8 +12,11 @@ import static org.mockito.BDDMockito.*;
 import java.util.Arrays;
 import java.util.List;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+import com.github.sergemart.picocmdb.AbstractUnitTests;
+import com.github.sergemart.picocmdb.domain.Role;
+import com.github.sergemart.picocmdb.exception.NoSuchObjectException;
+
+
 public class RoleServiceTests extends AbstractUnitTests {
 
 	@Autowired
@@ -48,11 +48,11 @@ public class RoleServiceTests extends AbstractUnitTests {
 		given(role.getId()).willReturn("dummy");
 		given(role2.getId()).willReturn("dummy2");
 		List<Role> result = Arrays.asList(role, role2);
-		given(roleDao.findAll()).willReturn(result);
+		given(super.roleDao.findAll()).willReturn(result);
 		// WHEN
-		roleService.getAllRoles();
+		this.roleService.getAllRoles();
 		// THEN
-		verify(roleDao, times(1)).findAll();
+		verify(super.roleDao, times(1)).findAll();
 		assertEquals("dummy", roleService.getAllRoles().get(0).getId());
 		assertEquals("dummy2", roleService.getAllRoles().get(1).getId());
 	}
@@ -63,11 +63,11 @@ public class RoleServiceTests extends AbstractUnitTests {
 			throws NoSuchObjectException {
 		// GIVEN
 		given(role.getId()).willReturn("dummy");
-		given(roleDao.findById(anyString())).willReturn(role);
+		given(super.roleDao.findById(anyString())).willReturn(role);
 		// WHEN
-		roleService.getRole("dummy");
+		this.roleService.getRole("dummy");
 		// THEN
-		verify(roleDao, times(1)).findById("dummy");
+		verify(super.roleDao, times(1)).findById("dummy");
 		assertEquals("dummy", roleService.getRole("dummy").getId());
 	}
 
@@ -76,11 +76,11 @@ public class RoleServiceTests extends AbstractUnitTests {
 	public void getRole_Reports_When_No_Such_Role()
 			throws NoSuchObjectException {
 		// GIVEN
-		given(roleDao.findById(anyString())).willReturn(null);
+		given(super.roleDao.findById(anyString())).willReturn(null);
 		// WHEN
-		roleService.getRole("dummy");
+		this.roleService.getRole("dummy");
 		// THEN
-		verify(roleDao, times(1)).findById("dummy");
+		verify(super.roleDao, times(1)).findById("dummy");
 	}
 
 }

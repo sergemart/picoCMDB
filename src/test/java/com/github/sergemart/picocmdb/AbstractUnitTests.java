@@ -1,5 +1,6 @@
 package com.github.sergemart.picocmdb;
 
+import com.github.sergemart.picocmdb.dao.ConfigurationItemRelationTypeDao;
 import com.github.sergemart.picocmdb.dao.ConfigurationItemTypeDao;
 import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,8 @@ public abstract class AbstractUnitTests {
 	protected ManagedAreaDao managedAreaDao;
 	@MockBean
 	protected ConfigurationItemTypeDao configurationItemTypeDao;
+	@MockBean
+	protected ConfigurationItemRelationTypeDao configurationItemRelationTypeDao;
 
 	// JUnit rules
 
