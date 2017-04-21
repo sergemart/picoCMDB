@@ -1,5 +1,6 @@
 body {
 	background-color: transparent;
+	height: 100%;
 }
 
 html {
@@ -7,5 +8,58 @@ html {
 	background: -webkit-linear-gradient(to right, #777777, #dddddd);
 	background: -o-linear-gradient(to right, #777777, #dddddd);
 	background: -moz-linear-gradient(to right, #777777, #dddddd);
-	background: linear-gradient(to right, #777777, #dddddd)
+	background: linear-gradient(to right, #777777, #dddddd);
+	height: 100%;
+}
+
+.container, .container-fluid {
+	/*height: 100%;*/
+}
+
+#common-navbar-wrapper-row {
+	height: auto;
+}
+
+#graph-workspace-wrapper-row {
+	height: auto;
+}
+
+#graph-panel-wrapper-column {
+	height: auto;
+}
+
+#graph {
+	height: 500px;
+}
+
+
+
+
+
+.v-expander {
+	height: 100%;
+}
+
+.mark-green {
+	border: 6px solid green;
+}
+
+.mark-yellow {
+	border: 4px solid yellow;
+}
+
+.mark-cyan {
+	border: 4px solid cyan;
+}
+
+.mark-red {
+	border: 4px solid red;
+}
+
+.mark-blue {
+	border: 4px solid blue;
+}
+
+.mark-superblue {
+	border: 10px solid blue;
 }

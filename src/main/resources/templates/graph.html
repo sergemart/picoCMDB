@@ -5,30 +5,42 @@
 
 <body>
 
-<div class="container">
-    <div th:replace="common/fragments :: common-navbar">
+<div class="container-fluid mark-superblue">
+
+    <!--div th:replace="common/fragments :: common-navbar">
+    </div-->
+
+    <div class="row mark-green" id="common-navbar-wrapper-row">
+        <div class="col-sm-12">
+            <div class="navbar navbar-default">
+                <div class="navbar-header">
+                </div>
+                <nav class="collapse navbar-collapse">
+                </nav>
+            </div>
+        </div>
     </div>
-    
-    <div class="row" id="main-wrapper-row">
-        <div class="col-sm-3">
+
+    <div class="row mark-red" id="graph-workspace-wrapper-row">
+
+        <div class="col-sm-3 mark-yellow" id="graph-sidebar-wrapper-column">
+            <!-- the sidebar lists available CI-CI relation types -->
             <ul class="nav list-group">
-                <li>
-                    <a class="list-group-item" href="#">Sidebar Item 1</a>
-                </li>
-                <li>
-                    <a class="list-group-item" href="#">Sidebar Item 2</a>
-                </li>
-                <li>
-                    <a class="list-group-item" href="#">Sidebar Item 3</a>
+                <li data-th-each="ciRelationType : ${availableCiRelationTypes}">
+                    <a class="list-group-item" href="#" data-th-text="${ciRelationType.id}"></a>
                 </li>
             </ul>
         </div>
 
-        <div class="col-sm-9">
-            <div class="panel">
-                <div class="panel-body">Граф</div>
+        <div class="col-sm-9 mark-cyan" id="graph-panel-wrapper-column">
+            <!-- the panel contains a graph of CIs connected by selected CI-CI relation type -->
+            <div class="panel panel-primary">
+                <div class="panel-heading" data-th-text="${currentManagedArea.getName()}"></div>
+                <div class="panel-body" id="graph"></div>
+                <div class="panel-footer" data-th-text="${currentCiRelationType.getId()}"></div>
             </div>
         </div>
+
     </div>
 </div>
 
