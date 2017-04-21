@@ -9,7 +9,7 @@
     <title>@project.name@</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/custom.css}"/>
@@ -30,16 +30,16 @@
 
 <div th:fragment="common-scripts">
     <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
 
     <!-- Bootstrap library -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
 
     <!-- Cytoscape graph library -->
-    <script src="https://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
+    <script th:src="@{/js/cytoscape.min.js}"></script>
 
     <!-- Cytoscape example -->
-    <script th:src="@{/js/cytoscape.js}"></script>
+    <script th:src="@{/js/cytoscape-example.js}"></script>
 </div>
 
 
